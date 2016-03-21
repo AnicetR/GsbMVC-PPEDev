@@ -1,0 +1,60 @@
+<include href="public/header.phtml" />
+
+<div class="row">
+    <div class="medium-6 columns">
+        <img src="/images/logoalt.png" alt="GSB Logo">
+    </div>
+
+
+</div>
+<div class="white-panel fullwidth">
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <include href="public/messages.phtml" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-3 columns">
+                            <include href="public/manager/partials/menu.phtml" />
+
+                        </div>
+                        <div class="medium-9 columns">
+                            <div class="row">
+                                <div class="col-md-12 columns">
+                                    <h2>Mes infos</h2>
+                                    <div class="row">
+                                        <form action="/Manager/accountUpdate" method="POST">
+                                            <repeat group="{{ @userInfos }}" key="{{ @name }}" value="{{ @info }}">
+                                                <div class="col-md-12 columns">
+                                                    <check if="{{ @name != 'username'}}">
+                                                        <check if="{{ @name != 'role'}}">
+                                                            <label for="{{ trim(@name) }}">{{ ucfirst(trim(@name)) }}</label><input type="text" name="{{ trim(@name) }}" value="{{ trim(@info) }}">
+                                                        </check>
+                                                    </check>
+                                                    <check if="{{ @name == 'username' }}">
+                                                        <label for="{{ trim(@name) }}">{{ ucfirst(trim(@name)) }}</label><input type="text" value="{{ trim(@info) }}" disabled>
+                                                    </check>
+                                                    <check if="{{ @name == 'role' }}">
+                                                        <label for="{{ trim(@name) }}">{{ ucfirst(trim(@name)) }}</label><input type="text" value="{{ ucfirst(trim(@info)) }}" disabled>
+                                                    </check>
+                                                </div>
+                                            </repeat>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<include href="public/footer.phtml" />

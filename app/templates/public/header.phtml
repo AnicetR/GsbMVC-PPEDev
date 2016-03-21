@@ -1,0 +1,14 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet du laboratoire GSB</title>
+    <link rel="stylesheet" href="/css/app.css">
+
+    <check if="{{ @application['environment'] == 'developpement' }}">
+        {{ @debugbarjs->renderHead() }}
+    </check>
+</head>
+<body>

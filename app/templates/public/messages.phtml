@@ -1,0 +1,16 @@
+<set flash="{{ FFMVC\Helpers\Messages::instance()->get() }}"/>
+
+<div id="messages">
+    <check if="{{ is_array(@flash) }}">
+        <repeat group="{{ @flash }}" key="{{ @type }}" value="{{ @messages }}">
+            <repeat group="{{ @messages }}" value="{{ @message }}">
+                <div class="{{ @type }} callout" data-closable="slide-out-right">
+                    {{ @message }}
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </repeat>
+        </repeat>
+    </check>
+</div>

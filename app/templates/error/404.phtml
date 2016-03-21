@@ -1,0 +1,46 @@
+<?php
+$f3 = \Base::instance();
+$e = $f3->get('ERROR');
+$title = 'Error:' . $e['code'];
+$f3->set('title', $title);
+?>
+<?php echo \Template::instance()->render('error/partials/header.phtml'); ?>
+
+    <div class="row">
+        <div class="medium-6 columns">
+            <img src="/images/logoalt.png" alt="GSB Logo">
+        </div>
+
+
+    </div>
+
+    <div class="white-panel fullwidth">
+
+    <div class="row">
+    <div class="medium-12 columns">
+
+    <h1><?php echo $title ?></h1>
+
+    <p>
+        <em><?php echo $e['status'] ?></em><br/>
+        Une erreur est apparue
+    </p>
+
+<?php if ($f3->get('application.environment') !== 'production'): ?>
+    <h2>Error Context</h2>
+    <pre>
+<?php echo $e['text'] ?>
+</pre>
+
+    <h2>Error Trace</h2>
+    <pre>
+    <?php echo nl2br($e['trace']) ?>
+</pre>
+    </div>
+    </div>
+    </div>
+
+<?php endif ?>
+
+
+<?php echo \Template::instance()->render('error/partials/footer.phtml'); ?>

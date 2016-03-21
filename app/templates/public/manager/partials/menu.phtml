@@ -1,0 +1,8 @@
+<p class="text-justify">Vous êtes connecté en tant que <b>{{ @userInfos->nom }} {{ @userInfos->prenom }}</b> dans la partie <b>{{ @userInfos->role }}</b> de l'intranet GSB.</p>
+
+<repeat group="{{ @menu }}" value="{{ @element }}">
+
+    <a class="button expanded {{ @element['class'] }}" href="{{ @element['link'] }}">{{ @element['label'] }}</a>
+    
+</repeat>
+<a class="button alert small expanded" href="/Auth/logout"><i class="fi-prohibited large"></i> Déconnexion</a>

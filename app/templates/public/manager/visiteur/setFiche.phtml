@@ -1,0 +1,120 @@
+<include href="public/header.phtml" />
+
+<div class="row">
+    <div class="medium-6 columns">
+        <img src="/images/logoalt.png" alt="GSB Logo">
+    </div>
+
+
+</div>
+<div class="white-panel fullwidth">
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <include href="public/messages.phtml" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-3 columns" style="border-right: 1px solid #dddddd;">
+                            <include href="public/manager/partials/menu.phtml" />
+
+                        </div>
+                        <div class="medium-9 columns">
+                            <div class="row">
+                                <div class="col-md-12 columns">
+                                    <h3>Renseigner ma fiche de frais du mois 03-2016</h3>
+
+                                        <h4>Elements forfaitisés</h4>
+
+
+                                        <form method="POST" action="/Manager/saveBundled">
+                                            <repeat group="{{ @lignefraisforfait }}" value="{{ @ligne }}">
+                                                <div class="col-md-12 columns">
+                                                    <div class="input-group">
+                                                        <span class="input-group-label">{{ @ligne['libelle'] }} :</span>
+                                                        <input class="input-group-field" type="number" name="{{ @ligne['idFrais'] }}" value="{{ @ligne['quantite'] }}">
+                                                    </div>
+                                                </div>
+
+                                            </repeat>
+                                            <div class="col-md-12 columns text-right">
+                                                <button class="button success" name="" type="submit" placeholder=""><i class="fi-save"></i> Enregistrer</button>
+                                            </div>
+                                        </form>
+
+
+                                        <h4>Elements hors forfait</h4>
+                                        <table class="hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Libellé</th>
+                                                    <th>Montant</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <repeat group="{{ @lignefraishorsforfait }}" value="{{ @ligne }}">
+                                                    <tr>
+                                                        <td>{{ date_format(date_create(@ligne['date']), 'd/m/Y') }}</td>
+                                                        <td>{{ @ligne['libelle'] }}</td>
+                                                        <td>{{ @ligne['montant'] }}€</td>
+                                                        <td class="text-right"><a href="/Manager/deleteNotBundled/{{ @ligne['id'] }}" class="button small alert deletehorsforfait">Supprimer ce frais</a></td>
+                                                    </tr>
+                                                </repeat>
+
+                                            </tbody>
+                                        </table>
+                                        <p class="text-right"><a class="button success" data-open="horsforfait"><i class="fi-plus large"></i> Ajouter un élément</a></p>
+
+                                    <div class="reveal" id="horsforfait" data-reveal>
+                                        <h4>Ajouter un frais hors forfait</h4>
+                                        <div class="row">
+                                            <div class="small-12">
+                                                <form method="POST" id="saisiehorsforfait" action="/Manager/saveNotBundled">
+                                                    <div class="col-md-12 columns">
+                                                        <div class="input-group">
+                                                            <span class="input-group-label">Date :</span>
+                                                            <input class="input-group-field" name="date" type="date" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 columns">
+                                                        <div class="input-group">
+                                                            <span class="input-group-label">Libellé :</span>
+                                                            <input class="input-group-field" name="libelle" value="" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 columns">
+                                                        <div class="input-group">
+                                                            <span class="input-group-label">Montant en euros :</span>
+                                                            <input class="input-group-field" name="montant" value="" type="number" placeholder="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 columns text-right">
+                                                        <a class="button warning horsforfaitreset"><i class="fi-refresh"></i> Réinitialiser le formulaire</a>
+                                                        <button class="button success" name="" type="submit" placeholder=""><i class="fi-save"></i> Enregistrer</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <button class="close-button horsforfaitreset" data-close aria-label="Close modal">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<include href="public/footer.phtml" />

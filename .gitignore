@@ -1,0 +1,18 @@
+# Include your project-specific ignores in this file
+# Read about how to use .gitignore: https://help.github.com/articles/ignoring-files
+.svn
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.tmp
+*.bak
+*.old
+*.log
+tmp
+vendor
+node_modules
+.idea
+public/bower_components
+public/css
