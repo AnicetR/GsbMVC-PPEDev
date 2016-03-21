@@ -1,4 +1,4 @@
-# GSB MVC
+# GSB MVC [![StyleCI](https://styleci.io/repos/54356082/shield)](https://styleci.io/repos/54356082)
 
 Base GSB MVC pour le PPE1 de BTS SIO, basée sur Fat Free Framework et sur le travail de Vijay Mahrra (FFMVC et F3 boilerplate)
 
