@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Models;
 
-use DB\SQL\Mapper as Mapper;
 use Base;
-use Registry;
 use Cache;
+use DB\SQL\Mapper as Mapper;
+use Registry;
 
 class MainModel extends Mapper
 {

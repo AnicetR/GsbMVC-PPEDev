@@ -1,6 +1,8 @@
 <?php
+
 namespace GSB\App;
-chdir(realpath(__DIR__ . '/../app'));
+
+chdir(realpath(__DIR__.'/../app'));
 if (session_status() == PHP_SESSION_NONE) {
     ini_set('session.auto_start', 0);
 }

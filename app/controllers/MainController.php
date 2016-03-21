@@ -1,28 +1,25 @@
 <?php
 /**
- * Classe mère de tous les contrôleurs
+ * Classe mère de tous les contrôleurs.
  *
  * Permet d'inclure dans tous les contrôleurs un comportement par défaut ainsi que les utility class dont ils ont besoin
  */
-
 namespace App\Controllers;
 
 use Base;
-use View;
-use Template;
-use Session;
 use FFMVC\Helpers as Helpers;
-use DebugBar\StandardDebugBar;
+use Session;
+use Template;
+use View;
 
 class MainController
 {
     protected $f3, $view, $flash;
 
-
     /**
-     * Constructeur du contrôleur global
+     * Constructeur du contrôleur global.
      */
-    function __construct()
+    public function __construct()
     {
         //Chargement des fonctionnalités du Framework
         $this->f3 = Base::instance();
@@ -37,16 +34,15 @@ class MainController
             $this->f3->set('debugbarjs', $this->debugbar->getJavascriptRenderer('/debugbar'));
         }
 
-
         $this->f3->set('menu', $this->generateMenu());
     }
 
     /**
-     * A faire avant tout routage
+     * A faire avant tout routage.
      *
      * Vérfie que l'utilisateur est bien connecté, sinon, renvoie à l'accueil
      */
-    function beforeRoute()
+    public function beforeRoute()
     {
         $route = $this->getCurrentRoute();
         if (($route['controller'] != 'Auth') && ($route['method'] != 'login' || $route['method'] != 'index')) {
@@ -58,32 +54,31 @@ class MainController
     }
 
     /**
-     * A faire après tout routage
+     * A faire après tout routage.
      */
-    function afterRoute()
+    public function afterRoute()
     {
-
     }
 
     /**
-     * Connaitre le controlleur et la méthode utilisée pour la page en cours (la route)
+     * Connaitre le controlleur et la méthode utilisée pour la page en cours (la route).
      *
      * @return array ['controller' => nom du controller, 'method' => le nom de la méthode]
      */
-
-    function getCurrentRoute()
+    public function getCurrentRoute()
     {
         $hive = $this->f3->hive();
         $tmp = explode('->', $hive['ROUTES'][$this->f3->get('PATTERN')][3][$hive['VERB']][0]);
         //On skip les 17 premiers caractères (\App\Controllers\) et on récupère le premier mot
         preg_match('/.{17}(\w+)/', $tmp[0], $tmp[0]);
         $tmp[0] = $tmp[0][1];
+
         return ['controller' => $tmp[0], 'method' => $tmp[1]];
     }
 
-
     /**
-     * Permet de générer le menu en fonction de l'élévation de l'utilisateur
+     * Permet de générer le menu en fonction de l'élévation de l'utilisateur.
+     *
      * @return array Le menu hierarchisé
      */
     private function generateMenu()
@@ -94,10 +89,11 @@ class MainController
         //Récupération du controleur/méthode
         $current = $this->getCurrentRoute();
 
-        if ($current['method'] != "index" || empty($current['method']))
-            $current = '/' . implode('/', $current);
-        else
-            $current = '/' . $current['controller'];
+        if ($current['method'] != 'index' || empty($current['method'])) {
+            $current = '/'.implode('/', $current);
+        } else {
+            $current = '/'.$current['controller'];
+        }
 
         //Création des éléments du menu pour le site
         $return = [];
@@ -108,6 +104,7 @@ class MainController
                 }
             }
         }
+
         return $return;
     }
 }

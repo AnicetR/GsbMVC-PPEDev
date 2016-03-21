@@ -1,18 +1,19 @@
 <?php
+
 namespace App\Controllers\Manager;
 
-use App\Models\User;
-use App\Models\Role;
-use App\Models\Frais;
-use App\Models\Fiche;
-use App\Helpers\Frais as FraisHelper;
 use App\Controllers\MainController;
+use App\Helpers\Frais as FraisHelper;
+use App\Models\Fiche;
+use App\Models\Frais;
+use App\Models\Role;
+use App\Models\User;
 
 class Visiteur extends MainController
 {
     /**
      * GET Route par défaut du contrôleur
-     * Vue interface
+     * Vue interface.
      */
     public function index()
     {
@@ -22,7 +23,7 @@ class Visiteur extends MainController
 
     /**
      * GET Route
-     * Affichage des infos du compte
+     * Affichage des infos du compte.
      */
     public function account()
     {
@@ -33,7 +34,7 @@ class Visiteur extends MainController
 
     /**
      * GET Route
-     * Affichage de la saisie des fiches
+     * Affichage de la saisie des fiches.
      */
     public function setFiche()
     {
@@ -48,7 +49,7 @@ class Visiteur extends MainController
 
     /**
      * GET Route
-     * Affichage de la liste des fiches
+     * Affichage de la liste des fiches.
      */
     public function fichesList()
     {
@@ -66,31 +67,30 @@ class Visiteur extends MainController
             $this->f3->set('ficheFrais', $ficheFrais);
         }
 
-
         echo $this->view->render('public/manager/visiteur/ficheList.phtml');
         die();
     }
 
-
     /**
      * POST Route
-     * Sauvegarder les éléments forfaitisés
+     * Sauvegarder les éléments forfaitisés.
      */
     public function saveBundled()
     {
         $postDatas = $this->f3->get('POST');
 
-        if (Frais::saveBundled($postDatas, $this->f3->get('SESSION.userid')))
+        if (Frais::saveBundled($postDatas, $this->f3->get('SESSION.userid'))) {
             $this->flash->add('Les éléments forfaitisés ont bien été enregistrés.', 'success');
-        else
+        } else {
             $this->flash->add('Un erreur est survenue, les éléments forfaitisés n\'ont pas pu être enregistré. <br/>Merci de réitérer votre saisie ou de contacter le service technique.', 'alert');
+        }
 
         $this->f3->reroute('/Manager/setFiche');
         exit();
     }
 
     /**
-     * POST Route
+     * POST Route.
      *
      * Sauvegare d'un élément non forfaitisé
      */
@@ -98,35 +98,34 @@ class Visiteur extends MainController
     {
         $postDatas = $this->f3->get('POST');
         $save = true;
-        try{
+        try {
             $exception = false;
             $expected = ['date', 'libelle', 'montant'];
-            foreach ($expected as $key){
-                if(!array_key_exists($key, $postDatas)) {
-                    $this->flash->add('Le champs <b>' . $key . '</b> doit être renseigné', 'alert');
+            foreach ($expected as $key) {
+                if (!array_key_exists($key, $postDatas)) {
+                    $this->flash->add('Le champs <b>'.$key.'</b> doit être renseigné', 'alert');
                     $exception = true;
                 }
             }
-            if($exception)
-                throw new \Exception;
-            else if(!$date = \DateTime::createFromFormat('Y-m-d', $postDatas['date'])){
+            if ($exception) {
+                throw new \Exception();
+            } elseif (!$date = \DateTime::createFromFormat('Y-m-d', $postDatas['date'])) {
                 $this->flash->add('\'La date d\'engagement doit être valide', 'alert');
-                throw new \Exception;
-            }
-            else if(!FraisHelper::isLessThanOneYearOld($date)){
+                throw new \Exception();
+            } elseif (!FraisHelper::isLessThanOneYearOld($date)) {
                 $this->flash->add('La date d\'engagement doit se situer dans l’année écoulée', 'alert');
-                throw new \Exception;
+                throw new \Exception();
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $save = false;
         }
 
-
-        if($save){
-            if (Frais::saveNotBundled($postDatas, $this->f3->get('SESSION.userid')))
+        if ($save) {
+            if (Frais::saveNotBundled($postDatas, $this->f3->get('SESSION.userid'))) {
                 $this->flash->add('L\'élément non forfaitisé a bien été enregistré.', 'success');
-            else
+            } else {
                 $this->flash->add('Un erreur est survenue, l\'élément non forfaitisé n\'a pas pu être enregistré. <br/>Merci de réitérer votre saisie ou de contacter le service technique.', 'alert');
+            }
         }
 
         $this->f3->reroute('/Manager/setFiche');
@@ -134,22 +133,25 @@ class Visiteur extends MainController
     }
 
     /**
-     * Suppression d'un élément non forfaitisé
+     * Suppression d'un élément non forfaitisé.
+     *
      * @param $id
      */
     public function deleteNotBundled()
     {
-        if (Frais::deleteNotBundled($this->f3->get('PARAMS.id'), $this->f3->get('SESSION.userid')))
+        if (Frais::deleteNotBundled($this->f3->get('PARAMS.id'), $this->f3->get('SESSION.userid'))) {
             $this->flash->add('L\'élément non forfaitisé a bien été supprimé.', 'success');
-        else
+        } else {
             $this->flash->add('Un erreur est survenue, l\'élément non forfaitisé n\'a pas pu être supprimé. <br/>Merci de réitérer votre tentative ou de contacter le service technique.', 'alert');
+        }
 
         $this->f3->reroute('/Manager/setFiche');
         exit();
     }
 
     /**
-     * Récupération des informations du compte utilisateur
+     * Récupération des informations du compte utilisateur.
+     *
      * @return bool
      */
     private function getUserInfos()
@@ -158,13 +160,15 @@ class Visiteur extends MainController
         $tempUser = new \stdClass();
         $user->getByName($this->f3->get('SESSION.username'));
         foreach ($user as $key => $value) {
-            if ($key != 'id' && $key != 'dateEmbauche' && $key != 'mdp')
+            if ($key != 'id' && $key != 'dateEmbauche' && $key != 'mdp') {
                 $tempUser->$key = $value;
+            }
         }
         $tempUser->role = Role::getRoleName($tempUser->role);
-        if ($this->f3->set('userInfos', $tempUser))
+        if ($this->f3->set('userInfos', $tempUser)) {
             return true;
+        }
+
         return false;
     }
-
 }

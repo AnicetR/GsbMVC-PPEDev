@@ -2,13 +2,13 @@
 
 namespace GSB\App;
 
+use DebugBar\StandardDebugBar;
 use FFMVC\App\Main;
 use FFMVC\Helpers as Helpers;
-use DebugBar\StandardDebugBar;
 
 /**
  * fat-free framework application
- * Execution en appelant Run();. (public/index.php)
+ * Execution en appelant Run();. (public/index.php).
  *
  * @author Vijay Mahrra <vijay@yoyo.org>
  * @copyright (c) Copyright 2013 Vijay Mahrra & Modified by Anicet Réglat Vizzavona for GSB
@@ -44,7 +44,7 @@ function Run()
         $f3->get('db.password')
     );
 
-    if($f3->get('application.environment') == 'developpement') {
+    if ($f3->get('application.environment') == 'developpement') {
         // Ajout de la trace SQL pour debugbar
         $debugbar = new StandardDebugBar();
         $pdo = new \DebugBar\DataCollector\PDO\TraceablePDO($db->pdo());
@@ -54,11 +54,10 @@ function Run()
         \Registry::set('db', $db);
     }
 
-
     // Ne pas utiliser de session pour les appels sur l'API
     if (stristr($f3->get('PATH'), '/api') !== false && session_status() !== PHP_SESSION_NONE) {
         session_write_close();
-    } else if (session_status() == PHP_SESSION_NONE) {
+    } elseif (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
 
@@ -75,18 +74,18 @@ function Run()
                 $debug = $f3->get('DEBUG');
                 if (stristr($f3->get('PATH'), '/api') !== false) {
                     $response = Helpers\Response::instance();
-                    $data = array(
+                    $data = [
                         'service' => 'API',
                         'version' => 1,
-                        'time' => time(),
-                        'method' => $f3->get('VERB')
-                    );
+                        'time'    => time(),
+                        'method'  => $f3->get('VERB'),
+                    ];
                     $e = $f3->get('ERROR');
-                    $data['error'] = array(
-                        'code' => substr($f3->snakecase(str_replace(' ', '', $e['status'])), 1),
-                        'description' => $e['code'] . ' ' . $e['text']
-                    );
-                    $params = array('http_status' => $e['code']);
+                    $data['error'] = [
+                        'code'        => substr($f3->snakecase(str_replace(' ', '', $e['status'])), 1),
+                        'description' => $e['code'].' '.$e['text'],
+                    ];
+                    $params = ['http_status' => $e['code']];
                     $return = $f3->get('REQUEST.return');
                     switch ($return) {
                         case 'xml':
@@ -106,35 +105,34 @@ function Run()
         });
 
         // Permet de rendre "propres" tous les inputs utilisateurs par défaut
-        $request = array();
-        foreach (array('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COOKIE') as $var) {
-            $input = $f3->get($var);
-            if (is_array($input) && count($input)) {
-                $cleaned = array();
-                foreach ($input as $k => $v) {
-                    $k = strtolower(trim($f3->clean($k)));
-                    $v = $f3->clean($v);
-                    if (empty($v)) {
-                        continue;
-                    }
-                    $cleaned[$k] = $v;
-                    $request[$k] = $v;
+        $request = [];
+    foreach (['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'COOKIE'] as $var) {
+        $input = $f3->get($var);
+        if (is_array($input) && count($input)) {
+            $cleaned = [];
+            foreach ($input as $k => $v) {
+                $k = strtolower(trim($f3->clean($k)));
+                $v = $f3->clean($v);
+                if (empty($v)) {
+                    continue;
                 }
-                ksort($cleaned);
-                $f3->set($var, $cleaned);
+                $cleaned[$k] = $v;
+                $request[$k] = $v;
             }
+            ksort($cleaned);
+            $f3->set($var, $cleaned);
         }
-        ksort($request);
-        $f3->set('REQUEST', $request);
-        $f3->set('PageHash', md5(json_encode(array_merge($request, $_SERVER, $_ENV))));
-        unset($cleaned);
-        unset($request);
+    }
+    ksort($request);
+    $f3->set('REQUEST', $request);
+    $f3->set('PageHash', md5(json_encode(array_merge($request, $_SERVER, $_ENV))));
+    unset($cleaned);
+    unset($request);
 
         // Récupération des routes
         $f3->config('config/routes.ini');
         // Initialisation de la variable menu
         $f3->set('application.menu', include('config/menu.php'));
-
 
     $f3->run();
 
