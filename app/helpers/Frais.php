@@ -1,16 +1,16 @@
 <?php
+
 namespace App\Helpers;
 
 use DateTime;
-use FFMVC\Models\Base;
 
 class Frais
 {
-
     /**
-     * Retourne le mois formaté correctement pour l'affichage dans la liste de frais
+     * Retourne le mois formaté correctement pour l'affichage dans la liste de frais.
      *
      * @param string $date La date au format 201603
+     *
      * @return string La date au format 03/2016
      */
     public static function formatMonth($date)
@@ -18,20 +18,21 @@ class Frais
         $year = substr($date, 0, 4);
         $month = substr($date, 4, 2);
 
-        return $month . '/' . $year;
+        return $month.'/'.$year;
     }
 
     /**
-     * Retourne le mois formaté en version compacte
+     * Retourne le mois formaté en version compacte.
      *
      * @param string $date La date au format 03/2016
+     *
      * @return string La date au format 201603
      */
     public static function deformatMonth($date)
     {
         $date = explode('/', $date);
 
-        return $date[1] . $date[0];
+        return $date[1].$date[0];
     }
 
     public static function isLessThanOneYearOld($date)
@@ -40,8 +41,10 @@ class Frais
         $interval = $date->diff($currentDate)->y;
         $invert = $date->diff($currentDate)->invert;
         print_r($interval);
-        if( $interval == 0 && !$invert)
+        if ($interval == 0 && !$invert) {
             return true;
+        }
+
         return false;
     }
 }

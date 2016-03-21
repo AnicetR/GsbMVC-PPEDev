@@ -3,36 +3,36 @@
 namespace App\Models;
 
 use DB\SQL\Mapper as Mapper;
-use App\Models\Frais;
 use Registry;
-
 
 class Fiche extends Mapper
 {
-
     public function __construct($table)
     {
         parent::__construct(Registry::get('db'), $table);
     }
 
     /**
-     * Retourne la liste des mois disponibles pour l'utilisateur
+     * Retourne la liste des mois disponibles pour l'utilisateur.
      *
      * @param $userID L'id de l'utilisateur
+     *
      * @return array La liste des fiches
      */
     public static function getList($userID)
     {
         $frais = new self('fichefrais');
         $frais->load(['idVisiteur=?', $userID]);
+
         return $frais->query;
     }
 
     /**
-     * Récupère la fiche de frais séléctionnée
+     * Récupère la fiche de frais séléctionnée.
      *
      * @param string $userID L'id de l'utilisateur
-     * @param string $month Le mois concerné
+     * @param string $month  Le mois concerné
+     *
      * @return array La fiche de frais si elle existe
      */
     public static function getFiche($userID, $month)
@@ -59,7 +59,7 @@ class Fiche extends Mapper
     public static function createFiche($userID, $month)
     {
         $db = Registry::get('db');
-        $request = "SELECT id FROM fraisforfait";
+        $request = 'SELECT id FROM fraisforfait';
         $fields = $db->exec($request);
 
         $db->begin();

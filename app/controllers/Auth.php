@@ -1,6 +1,6 @@
 <?php
 /**
- * Class de gestion de la connexion
+ * Class de gestion de la connexion.
  */
 namespace App\Controllers;
 
@@ -8,10 +8,9 @@ use App\Models\User;
 
 class Auth extends MainController
 {
-
     /**
      * GET Route par défaut du contrôleur
-     * Vue interface
+     * Vue interface.
      */
     public function index()
     {
@@ -19,12 +18,11 @@ class Auth extends MainController
             $this->debugbar['messages']->addMessage('Ceci est un message de debug afficher dans la PHP Debugbar (App\Controllers\Auth: ligne 19)');
         //Fin exemple
         echo $this->view->render('public/auth/index.phtml');
-
     }
 
     /**
      * POST Route
-     * Connexion de l'utilisateur
+     * Connexion de l'utilisateur.
      */
     public function login()
     {
@@ -34,7 +32,6 @@ class Auth extends MainController
         if (empty($username) || empty($password)) {
             $this->flash->add('Champs vides', 'alert');
         } else {
-
             $user = new User();
             $user->getByName($username);
             if (!$user->dry() && $user->checkUser($user, $password)) {
@@ -44,8 +41,9 @@ class Auth extends MainController
                 $this->f3->set('SESSION.logged', true);
                 $this->f3->reroute('/Manager');
                 exit();
-            } else
+            } else {
                 $this->flash->add('L\'association nom d\'utilisateur/mot de passe est incorrecte', 'alert');
+            }
         }
 
         $this->f3->reroute('/');
@@ -53,7 +51,7 @@ class Auth extends MainController
 
     /**
      * GET Route
-     * Déconnexion de l'utilisateur
+     * Déconnexion de l'utilisateur.
      */
     public function logout()
     {
@@ -62,6 +60,4 @@ class Auth extends MainController
         $this->f3->set('SESSION.role', false);
         $this->f3->reroute('/');
     }
-
-
 }

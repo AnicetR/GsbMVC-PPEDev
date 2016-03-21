@@ -3,23 +3,21 @@
 namespace App\Models;
 
 use DB\SQL\Mapper as Mapper;
-use Registry;
 use Exception;
-use App\Models\Fiche;
-
+use Registry;
 
 class Frais extends Mapper
 {
-
     public function __construct($table)
     {
         parent::__construct(Registry::get('db'), $table);
     }
 
     /**
-     * Récupère les éléments forfaitisés du mois en cours de l'utilisateur
+     * Récupère les éléments forfaitisés du mois en cours de l'utilisateur.
      *
      * @param $userID
+     *
      * @return mixed
      */
     public static function getCurrentBundled($userID)
@@ -30,15 +28,15 @@ class Frais extends Mapper
     }
 
     /**
-     * Récupère les éléments forfaitisés de l'utilisateur
+     * Récupère les éléments forfaitisés de l'utilisateur.
      *
      * @param $userID
      * @param $month
+     *
      * @return mixed
      */
     public static function getBundled($userID, $month)
     {
-
         $db = Registry::get('db');
         $request = "
             SELECT fraisforfait.id AS idFrais, fraisforfait.libelle AS libelle, lignefraisforfait.quantite AS quantite
@@ -51,8 +49,8 @@ class Frais extends Mapper
         $bundled = $db->exec($request);
 
         if (!is_array($bundled) || empty($bundled)) {
-
             Fiche::createFiche($userID, $month);
+
             return self::getBundled($userID, $month);
         }
 
@@ -60,10 +58,11 @@ class Frais extends Mapper
     }
 
     /**
-     * Sauvegarde des éléments forfaitisés
+     * Sauvegarde des éléments forfaitisés.
      *
      * @param array $data
      * @param $userId
+     *
      * @return bool
      */
     public static function saveBundled(array $data, $userId)
@@ -80,44 +79,49 @@ class Frais extends Mapper
                 $frais->quantite = $value;
                 $frais->save();
             }
+
             return true;
         } catch (Exception $e) {
             return false;
         }
-
     }
 
     /**
-     * Récupération des éléments non forfaitisés du mois courrant
+     * Récupération des éléments non forfaitisés du mois courrant.
      *
      * @param $userID int ID de l'utilisateur
+     *
      * @return array Les éléments non forfaitisés du mois courrant
      */
     public static function getCurrentNotBundled($userID)
     {
         $month = date('Ym');
+
         return self::getNotBundled($userID, $month);
     }
 
     /**
-     * Récupération des éléments non forfaitisés du mois sélectionné
+     * Récupération des éléments non forfaitisés du mois sélectionné.
      *
      * @param $userID int ID de l'utilisateur
      * @param $month string Mois sélectionné
+     *
      * @return array Les éléments non forfaitisés du mois sélectionné
      */
     public static function getNotBundled($userID, $month)
     {
         $frais = new self('lignefraishorsforfait');
         $frais->load(['idVisiteur=? AND mois=?', $userID, $month]);
+
         return $frais->query;
     }
 
     /**
-     * Sauvegarde de l'élément non forfaitisé
+     * Sauvegarde de l'élément non forfaitisé.
      *
-     * @param array $data les données à enregistrer, au format ['']
-     * @param int $userID Id de l'utilisateur
+     * @param array $data   les données à enregistrer, au format ['']
+     * @param int   $userID Id de l'utilisateur
+     *
      * @return bool renvoie true si l'élément a été enregistré, false si ce n'est pas le cas
      */
     public static function saveNotBundled(array $datas, $userID)
@@ -127,16 +131,19 @@ class Frais extends Mapper
         $frais->idVisiteur = $userID;
         $frais->mois = $month;
         $frais->copyfrom($datas);
-        if($frais->save())
+        if ($frais->save()) {
             return true;
+        }
+
         return false;
     }
 
     /**
-     * Suppression de l'élément non forfaitisé
+     * Suppression de l'élément non forfaitisé.
      *
      * @param int $userID L'id de l'utilisateur
-     * @param int $id L'id de la ligne de frait hors forfait
+     * @param int $id     L'id de la ligne de frait hors forfait
+     *
      * @return bool renvoie true si l'élément existe et a été supprimé, false si ce n'est pas le cas
      */
     public static function deleteNotBundled($userID, $id)
@@ -146,7 +153,7 @@ class Frais extends Mapper
         if (!empty($frais->id) && $frais->erase()) {
             return true;
         }
+
         return false;
     }
-
 }
