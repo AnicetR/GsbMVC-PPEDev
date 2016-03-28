@@ -11,6 +11,9 @@ class MainModel extends Mapper
 {
     protected $f3, $table, $cache, $debugbar;
 
+    /**
+     * MainModel constructor.
+     */
     public function __construct()
     {
         $this->f3 = Base::instance();

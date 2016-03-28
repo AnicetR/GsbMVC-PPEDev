@@ -18,12 +18,11 @@ class User extends MainModel
     /**
      * Enregistre un nouvel utilisateur | non utilisé.
      *
-     * @param $id
-     * @param $username
-     * @param $password
-     * @param int $roleId
+     * @param string  $username
+     * @param string  $password
+     * @param integer $roleId
      */
-    public function register($id, $username, $password, $roleId = 0)
+    public function register($username, $password, $roleId = 0)
     {
         $user = new self();
         $user->login = $username;
@@ -37,7 +36,7 @@ class User extends MainModel
     /**
      * Retourne l'utilisateur par l'ID.
      *
-     * @param $userId
+     * @param string $userId
      *
      * @return array
      */
@@ -51,7 +50,7 @@ class User extends MainModel
     /**
      * Retourne l'utilisateur par son nom d'utilisateur.
      *
-     * @param $username
+     * @param string $username
      *
      * @return array
      */
@@ -65,8 +64,8 @@ class User extends MainModel
     /**
      * Vérifie vérifie que le mot de passe saisi et le mot de passe utilisateur est le bon.
      *
-     * @param $user L'utilisateur créé avec le model
-     * @param $password Le mot de passe
+     * @param object $user L'utilisateur créé avec le model
+     * @param string $password Le mot de passe
      *
      * @return bool Retourne true si l'utilisateur/mot de passe sont les bons, false sinon.
      */

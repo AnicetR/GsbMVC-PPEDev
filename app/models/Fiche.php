@@ -7,6 +7,10 @@ use Registry;
 
 class Fiche extends Mapper
 {
+    /**
+     * Fiche constructor.
+     * @param string $table Le nom de la table
+     */
     public function __construct($table)
     {
         parent::__construct(Registry::get('db'), $table);
@@ -15,7 +19,7 @@ class Fiche extends Mapper
     /**
      * Retourne la liste des mois disponibles pour l'utilisateur.
      *
-     * @param $userID L'id de l'utilisateur
+     * @param string $userID L'id de l'utilisateur
      *
      * @return array La liste des fiches
      */
@@ -56,6 +60,12 @@ class Fiche extends Mapper
         return $ficheFrais;
     }
 
+    /**
+     * Créé la fiche correspondant au mois donné pour l'utilisateur donné
+     *
+     * @param string $userID
+     * @param int $month au forfait mmyyyy
+     */
     public static function createFiche($userID, $month)
     {
         $db = Registry::get('db');

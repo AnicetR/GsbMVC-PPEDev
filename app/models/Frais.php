@@ -16,7 +16,7 @@ class Frais extends Mapper
     /**
      * Récupère les éléments forfaitisés du mois en cours de l'utilisateur.
      *
-     * @param $userID
+     * @param string $userID
      *
      * @return mixed
      */
@@ -30,8 +30,8 @@ class Frais extends Mapper
     /**
      * Récupère les éléments forfaitisés de l'utilisateur.
      *
-     * @param $userID
-     * @param $month
+     * @param string $userID
+     * @param string $month au forfait mmyyyy
      *
      * @return mixed
      */
@@ -61,7 +61,7 @@ class Frais extends Mapper
      * Sauvegarde des éléments forfaitisés.
      *
      * @param array $data
-     * @param $userId
+     * @param string $userId
      *
      * @return bool
      */
@@ -89,7 +89,7 @@ class Frais extends Mapper
     /**
      * Récupération des éléments non forfaitisés du mois courrant.
      *
-     * @param $userID int ID de l'utilisateur
+     * @param $userID string ID de l'utilisateur
      *
      * @return array Les éléments non forfaitisés du mois courrant
      */
@@ -103,7 +103,7 @@ class Frais extends Mapper
     /**
      * Récupération des éléments non forfaitisés du mois sélectionné.
      *
-     * @param $userID int ID de l'utilisateur
+     * @param $userID string ID de l'utilisateur
      * @param $month string Mois sélectionné
      *
      * @return array Les éléments non forfaitisés du mois sélectionné
@@ -119,8 +119,8 @@ class Frais extends Mapper
     /**
      * Sauvegarde de l'élément non forfaitisé.
      *
-     * @param array $data   les données à enregistrer, au format ['']
-     * @param int   $userID Id de l'utilisateur
+     * @param array $data  les données à enregistrer, au format ['']
+     * @param string $userID Id de l'utilisateur
      *
      * @return bool renvoie true si l'élément a été enregistré, false si ce n'est pas le cas
      */
@@ -141,7 +141,7 @@ class Frais extends Mapper
     /**
      * Suppression de l'élément non forfaitisé.
      *
-     * @param int $userID L'id de l'utilisateur
+     * @param string $userID L'id de l'utilisateur
      * @param int $id     L'id de la ligne de frait hors forfait
      *
      * @return bool renvoie true si l'élément existe et a été supprimé, false si ce n'est pas le cas

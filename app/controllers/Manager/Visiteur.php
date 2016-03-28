@@ -90,9 +90,8 @@ class Visiteur extends MainController
     }
 
     /**
-     * POST Route.
-     *
-     * Sauvegare d'un élément non forfaitisé
+     * POST Route
+     * Sauvegarde d'un élément non forfaitisé
      */
     public function saveNotBundled()
     {
@@ -135,7 +134,7 @@ class Visiteur extends MainController
     /**
      * Suppression d'un élément non forfaitisé.
      *
-     * @param $id
+     * @param $id int id de l'élément non forfaitisé a supprimer
      */
     public function deleteNotBundled()
     {
