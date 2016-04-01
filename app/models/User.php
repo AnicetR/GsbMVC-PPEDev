@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-
+use FFMVC\Helpers;
 
 class User extends MainModel
 {
     protected $table = 'utilisateur';
-    private $hash;
 
     public function __construct()
     {
         parent::__construct();
-        $this->hash = $this->f3->get('application.hash');
     }
 
     /**
@@ -71,7 +69,7 @@ class User extends MainModel
      */
     public function checkUser($user, $password)
     {
-        if ($password == $user->mdp) {
+        if ($this->hashPwdCheck($password,$user->mdp)) {
             return true;
         }
 
@@ -90,4 +88,22 @@ class User extends MainModel
 
         return $user->save();
     }
+
+    /**
+     * Permet de hasher le mot de passe entré par l'utilisateur et de le comparer à celui enregistrer en bdd
+     *
+     * @param $password string Le mot de passe saisi par l'utilisateur
+     * @param $dbPwd string Le mot de passe enregistré en bdd
+     *
+     * @return bool Vrai si les chaines sont identiques, faux sinon.
+     */
+    public function hashPwdCheck($password, $dbPwd)
+    {
+        $hash = $this->f3->get('application.hash');
+        $len = strlen($dbPwd);
+        $password = hash($hash, $password);
+        $password = substr($password, 0, $len);
+        return  $password == $dbPwd ? true : false;
+    }
+    
 }
