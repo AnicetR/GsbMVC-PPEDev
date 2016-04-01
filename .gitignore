@@ -11,7 +11,7 @@
 *.old
 *.log
 tmp
-vendor
+/vendor/
 node_modules
 .idea
 public/bower_components
