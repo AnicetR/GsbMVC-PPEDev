@@ -43,7 +43,8 @@
         "FFMVC": "1.0.2",
         "bcosca/fatfree-core": "dev-master",
         "league/climate": "^3.2",
-        "maximebf/debugbar": "^1.11"
+        "maximebf/debugbar": "^1.11",
+        "plivo/plivo-php": "^1.0"
     },
     "suggest": {
         "php": ">=5.6.0"

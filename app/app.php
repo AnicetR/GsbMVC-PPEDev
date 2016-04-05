@@ -16,6 +16,7 @@ use FFMVC\Helpers as Helpers;
  */
 function Run()
 {
+
     // @see http://fatfreeframework.com/quick-reference#autoload
     $f3 = require_once '../vendor/bcosca/fatfree-core/base.php';
     $f3->set('AUTOLOAD', __dir__.';bcosca/fatfree-core/;../vendor/');
