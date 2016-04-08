@@ -11,6 +11,8 @@ use FFMVC\Helpers as Helpers;
 use Session;
 use Template;
 use View;
+use App\Models\User;
+use App\Models\Role;
 
 class MainController
 {
@@ -34,15 +36,31 @@ class MainController
             $this->f3->set('debugbarjs', $this->debugbar->getJavascriptRenderer('/debugbar'));
         }
 
-        $this->f3->set('menu', $this->generateMenu());
+
     }
 
     /**
      * A faire avant tout routage.
-     *
-     * Vérfie que l'utilisateur est bien connecté, sinon, renvoie à l'accueil
      */
     public function beforeRoute()
+    {
+        $this->f3->set('menu', $this->generateMenu());
+        $this->isConnectedOrReroute();
+        $this->isUserAllowedToContentOrReroute();
+    }
+
+    /**
+     * A faire après tout routage.
+     */
+    public function afterRoute()
+    {
+    }
+
+
+    /**
+     * Vérfie que l'utilisateur est bien connecté, sinon, renvoie à l'accueil
+     */
+    private function isConnectedOrReroute()
     {
         $route = $this->getCurrentRoute();
         if (($route['controller'] != 'Auth') && ($route['method'] != 'login' || $route['method'] != 'index')) {
@@ -53,11 +71,34 @@ class MainController
         }
     }
 
-    /**
-     * A faire après tout routage.
-     */
-    public function afterRoute()
+
+    private function isUserAllowedToContentOrReroute()
     {
+        $allowed = $this->f3->get('menu');
+
+        $current = $this->getCurrentRoute();
+        $canGoFurther = false;
+
+        if ($current['method'] != 'index' || empty($current['method'])) {
+            $current = '/'.implode('/', $current);
+        } else {
+            $current = '/'.$current['controller'];
+        }
+
+        $this->debugbar['messages']->addMessage($allowed);
+        foreach ($allowed as $item)
+        {
+            if($current == $item['link']){
+                $canGoFurther = true;
+                break;
+            }
+
+        }
+        if(!$canGoFurther){
+            $this->f3->reroute('/Manager');
+            exit();
+        }
+
     }
 
     /**
@@ -106,5 +147,28 @@ class MainController
         }
 
         return $return;
+    }
+
+    /**
+     * Récupération des informations du compte utilisateur.
+     *
+     * @return bool
+     */
+    protected function getUserInfos()
+    {
+        $user = new User();
+        $tempUser = new \stdClass();
+        $user->getByName($this->f3->get('SESSION.username'));
+        foreach ($user as $key => $value) {
+            if ($key != 'id' && $key != 'dateEmbauche' && $key != 'mdp') {
+                $tempUser->$key = $value;
+            }
+        }
+        $tempUser->role = Role::getRoleName($tempUser->role);
+        if ($this->f3->set('userInfos', $tempUser)) {
+            return true;
+        }
+
+        return false;
     }
 }
