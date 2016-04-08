@@ -39,8 +39,11 @@ class Fiche extends Mapper
      *
      * @return array La fiche de frais si elle existe
      */
-    public static function getFiche($userID, $month)
+    public static function getFiche($userID, $month, $lastMonth = null)
     {
+        if($lastMonth == null)
+            $lastMonth = date('Ym', strtotime('first day of previous month'));
+
         $ficheFrais = new \stdClass();
         $db = Registry::get('db');
         $request = "
@@ -50,18 +53,18 @@ class Fiche extends Mapper
                    etat.libelle AS libelle
             FROM fichefrais
             INNER JOIN etat ON fichefrais.idEtat = etat.id
-            WHERE fichefrais.idVisiteur = '$userID' AND fichefrais.mois = $month
+            WHERE fichefrais.idVisiteur = '$userID' AND fichefrais.mois = '$month'
         ";
 
         $ficheFrais->fiche = $db->exec($request)[0];
-        $ficheFrais->bundled = Frais::getBundled($userID, $month);
+        $ficheFrais->bundled = Frais::getBundled($userID, $month, $lastMonth);
         $ficheFrais->notBundled = Frais::getNotBundled($userID, $month);
 
         return $ficheFrais;
     }
 
     /**
-     * Créé la fiche correspondant au mois donné pour l'utilisateur donné
+     * Créé la fiche correspondant au mois donné pour l'utilisateur donné en cloturant celle du mois précèdent
      *
      * @param string $userID
      * @param int $month au forfait mmyyyy
@@ -73,6 +76,7 @@ class Fiche extends Mapper
         $fields = $db->exec($request);
 
         $db->begin();
+        $db->exec("UPDATE fichefrais  SET idEtat = 'CL', dateModif = CURRENT_DATE WHERE idVisiteur = '$userID', mois");
         $db->exec("INSERT INTO fichefrais (idVisiteur, mois, nbJustificatifs, montantValide, dateModif, idEtat) VALUES ('$userID', '$month', 0, 0, CURRENT_DATE, 'CR')");
         foreach ($fields as $id) {
             $id = $id['id'];
@@ -80,4 +84,20 @@ class Fiche extends Mapper
         }
         $db->commit();
     }
+
+    /**
+     * Cloturer la fiche
+     *
+     * @param string $userID
+     * @param int $month au forfait mmyyyy
+     */
+    public static function closeFiche($userID, $month)
+    {
+        $frais = new self('fichefrais');
+        $frais->load(['idVisiteur=?', 'mois=?', $userID, $month]);
+            $frais->idEtat = 'CL';
+            $frais->dateModif = date('Y-m-d H:i:s');
+        $frais->save();
+    }
+
 }

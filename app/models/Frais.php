@@ -23,19 +23,21 @@ class Frais extends Mapper
     public static function getCurrentBundled($userID)
     {
         $month = date('Ym');
+        $lastMonth = date('Ym', strtotime('first day of previous month'));
 
-        return self::getBundled($userID, $month);
+        return self::getBundled($userID, $month, $lastMonth);
     }
 
     /**
      * Récupère les éléments forfaitisés de l'utilisateur.
      *
      * @param string $userID
-     * @param string $month au forfait mmyyyy
+     * @param string $month au format mmyyyy
+     * @param string $lastMonth au format mmyyyy
      *
      * @return mixed
      */
-    public static function getBundled($userID, $month)
+    public static function getBundled($userID, $month, $lastMonth)
     {
         $db = Registry::get('db');
         $request = "
@@ -50,8 +52,8 @@ class Frais extends Mapper
 
         if (!is_array($bundled) || empty($bundled)) {
             Fiche::createFiche($userID, $month);
-
-            return self::getBundled($userID, $month);
+            Fiche::closeFiche($userID, $lastMonth);
+            return self::getBundled($userID, $month, $lastMonth);
         }
 
         return $bundled;

@@ -11,7 +11,7 @@ use App\Models\User;
 
 class Visiteur extends MainController
 {
-    /**
+     /**
      * GET Route par défaut du contrôleur
      * Vue interface.
      */
@@ -39,8 +39,8 @@ class Visiteur extends MainController
     public function setFiche()
     {
         $this->getUserInfos();
-        $this->f3->set('lignefraisforfait', Frais::getCurrentBundled($this->f3->get('SESSION.userid')));
 
+        $this->f3->set('lignefraisforfait', Frais::getCurrentBundled($this->f3->get('SESSION.userid')));
         $this->f3->set('lignefraishorsforfait', Frais::getCurrentNotBundled($this->f3->get('SESSION.userid')));
 
         echo $this->view->render('public/manager/visiteur/setFiche.phtml');
@@ -148,26 +148,5 @@ class Visiteur extends MainController
         exit();
     }
 
-    /**
-     * Récupération des informations du compte utilisateur.
-     *
-     * @return bool
-     */
-    private function getUserInfos()
-    {
-        $user = new User();
-        $tempUser = new \stdClass();
-        $user->getByName($this->f3->get('SESSION.username'));
-        foreach ($user as $key => $value) {
-            if ($key != 'id' && $key != 'dateEmbauche' && $key != 'mdp') {
-                $tempUser->$key = $value;
-            }
-        }
-        $tempUser->role = Role::getRoleName($tempUser->role);
-        if ($this->f3->set('userInfos', $tempUser)) {
-            return true;
-        }
 
-        return false;
-    }
 }
