@@ -3,39 +3,41 @@ namespace App\Controllers\API;
 
 use App\Models\User;
 use App\Models\Frais;
+use App\Helpers\Frais as FraisHelper;
+
 class Visiteur extends MainAPI{
 
     private $user, $userID;
     private $data = [];
-    
-    function __construct()
+
+    public function __construct()
     {
         parent::__construct();
         $this->user = new User();
         $this->userID = $this->f3->get('userId');
     }
 
-    function getUserInfos()
+    public function getUserInfos()
     {
         foreach ($this->user->getByID($this->userID) as $fieldName => $value)
-            $data[$fieldName] = $value;
-        echo json_encode($data);
+            $this->data[$fieldName] = $value;
+        echo json_encode($this->data);
     }
 
-    function getAllDatas()
+    public function getAllDatas()
     {
-        $data['fraisForfait'] = Frais::getCurrentBundled($this->userID);
-        $data['fraisHorsForfait'] = Frais::getCurrentNotBundled($this->userID);
-        echo json_encode($data);
+        $this->data['fraisForfait'] = Frais::getCurrentBundled($this->userID);
+        $this->data['fraisHorsForfait'] = Frais::getCurrentNotBundled($this->userID);
+        echo json_encode($this->data);
     }
 
-    function saveCurrentBundled()
+    public function saveCurrentBundled()
     {
         $postDatas = $this->f3->get('PUT');
         echo json_encode(Frais::saveBundled($postDatas, $this->userID) ? true : false);
     }
 
-    function saveCurrentNotBundled()
+    public function saveCurrentNotBundled()
     {
         $postDatas = $this->f3->get('PUT');
         $infos = [];
@@ -71,6 +73,10 @@ class Visiteur extends MainAPI{
         }
 
         echo json_encode($infos);
+    }
+
+    public function index(){
+        json_encode('test');
     }
 
 }

@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intranet du laboratoire GSB</title>
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.11/css/dataTables.foundation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.1/css/fixedHeader.foundation.min.css"/>
+
 
     <check if="{{ @application['environment'] == 'developpement' }}">
         {{ @debugbarjs->renderHead() }}

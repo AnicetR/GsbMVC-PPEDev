@@ -37,7 +37,7 @@ class MainAPI{
                 list($phoneNumber,$apiKey) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
         }
 
-        if (is_null($phoneNumber) || $userId = $this->accessManager->get($phoneNumber, $apiKey)) {
+        if (is_null($phoneNumber) || !$userId = $this->accessManager->getAccess($phoneNumber, $apiKey)) {
             header('WWW-Authenticate: Basic realm="GSB"');
             header('HTTP/1.0 401 Unauthorized');
             echo json_encode(false);
@@ -45,6 +45,7 @@ class MainAPI{
 
         } else {
             $this->f3->set('userId', $userId);
+            echo json_encode(true);
         }
     }
 

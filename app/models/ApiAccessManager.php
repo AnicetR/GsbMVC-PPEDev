@@ -1,19 +1,18 @@
 <?php
 
-namespace app\models;
+namespace App\Models;
 
 
-use App\Controllers\MainController;
-class ApiAccessManager extends MainController
+class ApiAccessManager extends MainModel
 {
-    private $table = 'accesapi';
+    protected $table = 'accesapi';
 
     function __construct()
     {
-        parent::construct($this->table);
+        parent::__construct($this->table);
     }
 
-    public function add($userId, $phoneNumber, $key)
+    public function addAccess($userId, $phoneNumber, $key)
     {
         $apiAccess = new self();
         $apiAccess->userId = $userId;
@@ -22,13 +21,13 @@ class ApiAccessManager extends MainController
         $apiAccess->save();
     }
 
-    public function remove($userId, $phoneNumber, $key)
+    public function removeAccess($userId, $phoneNumber, $key)
     {
         $apiAccess = $this->load(['userId = ?, phoneNumber = ?, apiKey = ?', $userId, $phoneNumber, $key]);
         $apiAccess->erase();
     }
 
-    public function get($phoneNumber, $key)
+    public function getAccess($phoneNumber, $key)
     {
         $apiAccess = $this->load(['phoneNumber = ?, apiKey = ?', $phoneNumber, $key]);
         return $apiAccess->userId ? $apiAccess->userId : false;

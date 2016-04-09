@@ -23,8 +23,8 @@ return [
         'roleId'  => 3,
         'content' => [
             // 'libelle' => 'lien'
-            'Fiches de frais à valider' => '/Manager/validateFiches',
-            'Historique des validations'      => '/Manager/validationHistory',
+            'Fiches de frais à valider' => '/Manager/pendingFiches',
+            //'Historique des validations'      => '/Manager/validationHistory',
         ],
     ],
 ];

@@ -1,0 +1,72 @@
+<include href="public/header.phtml" />
+
+    <div class="row">
+        <div class="medium-6 columns">
+            <img src="/images/logoalt.png" alt="GSB Logo">
+        </div>
+
+
+    </div>
+
+    <div class="white-panel fullwidth">
+
+        <div class="row">
+            <div class="medium-12 columns">
+                <include href="public/messages.phtml" />
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+            <div class="medium-12 columns">
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <div class="row">
+                            <div class="medium-3 columns">
+                                <include href="public/manager/partials/menu.phtml" />
+
+                            </div>
+                            <div class="medium-9 columns">
+                                <table id="validationList" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Visiteur</th>
+                                        <th>Mois</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Visiteur</th>
+                                        <th>Mois</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <repeat group="{{ @fiches }}" value="{{ @fiche }}">
+                                            <tr>
+                                                <td>{{ @fiche.nom }} {{ @fiche.prenom }}</td>
+                                                <td>{{ @fiche.mois }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </repeat>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<include href="public/footer.phtml" />
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#validationList').DataTable();
+    });
+</script>
