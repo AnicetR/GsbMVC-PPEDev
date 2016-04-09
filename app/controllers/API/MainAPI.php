@@ -2,9 +2,7 @@
 namespace App\Controllers\API;
 
 use App\Models\User;
-
 use Base;
-
 use App\Models\ApiAccessManager;
 
 class MainAPI{
@@ -14,6 +12,7 @@ class MainAPI{
     public function __construct(){
         $this->f3 = Base::instance();
         $this->accessManager = new ApiAccessManager();
+
     }
 
     public function beforeRoute()
@@ -30,22 +29,22 @@ class MainAPI{
     {
         $phoneNumber = null;
         $apiKey = null;
-        $userId = "";
+        $userId = null;
 
-        if ($this->f3->get('SERVER.HTTP_AUTHORIZATION')) {
-            if (strpos(strtolower($_SERVER['HTTP_AUTHORIZATION']),'basic')===0)
-                list($phoneNumber,$apiKey) = explode(':',base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+
+        if ($this->f3->get('SERVER.PHP_AUTH_USER') !== null && $this->f3->get('SERVER.PHP_AUTH_PW') !== null ) {
+            $phoneNumber = $this->f3->get('SERVER.PHP_AUTH_USER');
+            $apiKey = $this->f3->get('SERVER.PHP_AUTH_PW');
+            $userId = $this->accessManager->getAccess($phoneNumber, $apiKey);
         }
-
-        if (is_null($phoneNumber) || !$userId = $this->accessManager->getAccess($phoneNumber, $apiKey)) {
+        if (is_null($userId)){
             header('WWW-Authenticate: Basic realm="GSB"');
             header('HTTP/1.0 401 Unauthorized');
             echo json_encode(false);
             die();
-
-        } else {
+        }
+        else {
             $this->f3->set('userId', $userId);
-            echo json_encode(true);
         }
     }
 

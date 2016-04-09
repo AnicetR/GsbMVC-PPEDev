@@ -7,39 +7,49 @@ use App\Helpers\Frais as FraisHelper;
 
 class Visiteur extends MainAPI{
 
-    private $user, $userID;
+    private $user;
     private $data = [];
 
     public function __construct()
     {
         parent::__construct();
         $this->user = new User();
-        $this->userID = $this->f3->get('userId');
     }
 
     public function getUserInfos()
     {
-        foreach ($this->user->getByID($this->userID) as $fieldName => $value)
+
+        $user = $this->user->getByID($this->f3->get('userId'))[0];
+        foreach ($user as $fieldName => $value)
             $this->data[$fieldName] = $value;
         echo json_encode($this->data);
     }
 
     public function getAllDatas()
     {
-        $this->data['fraisForfait'] = Frais::getCurrentBundled($this->userID);
-        $this->data['fraisHorsForfait'] = Frais::getCurrentNotBundled($this->userID);
+        $userId = $this->f3->get('userId');
+        $this->data['fraisForfait'] = Frais::getCurrentBundled($userId);
+        $this->data['fraisHorsForfait'] = Frais::getCurrentNotBundled($userId);
         echo json_encode($this->data);
     }
 
     public function saveCurrentBundled()
     {
-        $postDatas = $this->f3->get('PUT');
-        echo json_encode(Frais::saveBundled($postDatas, $this->userID) ? true : false);
+        $infos = [];
+        $userId = $this->f3->get('userId');
+        $postDatas = $this->f3->get('GET');
+        if(Frais::saveBundled($postDatas, $userId))
+            $infos[] = ['success' => "Les frais forfaitisés ont bien été enregistrés."];
+        else
+            $infos[] = ['error' => "Une erreur est survenue, veuillez réessayer."];
+
+        echo json_encode($infos);
     }
 
     public function saveCurrentNotBundled()
     {
-        $postDatas = $this->f3->get('PUT');
+        $userId = $this->f3->get('userId');
+        $postDatas = $this->f3->get('GET');
         $infos = [];
         $save = true;
         try {
@@ -65,7 +75,7 @@ class Visiteur extends MainAPI{
         }
 
         if ($save) {
-            if (Frais::saveNotBundled($postDatas, $this->f3->get('SESSION.userid'))) {
+            if (Frais::saveNotBundled($postDatas, $userId)) {
                 $infos[] = ['success' => 'L\'élément non forfaitisé a bien été enregistré.'];
             } else {
                 $infos[] = ['error' => 'Un erreur est survenue, l\'élément non forfaitisé n\'a pas pu être enregistré. <br/>Merci de réitérer votre saisie ou de contacter le service technique.'];

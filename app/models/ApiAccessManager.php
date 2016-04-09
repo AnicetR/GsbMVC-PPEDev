@@ -9,7 +9,7 @@ class ApiAccessManager extends MainModel
 
     function __construct()
     {
-        parent::__construct($this->table);
+        parent::__construct();
     }
 
     public function addAccess($userId, $phoneNumber, $key)
@@ -23,13 +23,14 @@ class ApiAccessManager extends MainModel
 
     public function removeAccess($userId, $phoneNumber, $key)
     {
-        $apiAccess = $this->load(['userId = ?, phoneNumber = ?, apiKey = ?', $userId, $phoneNumber, $key]);
+        $apiAccess = $this->load(['userId = ?  AND phoneNumber = ? AND apiKey LIKE ?', $userId, $phoneNumber, $key]);
         $apiAccess->erase();
     }
 
     public function getAccess($phoneNumber, $key)
     {
-        $apiAccess = $this->load(['phoneNumber = ?, apiKey = ?', $phoneNumber, $key]);
-        return $apiAccess->userId ? $apiAccess->userId : false;
+        $apiAccess = $this->load(["phoneNumber = ? AND apiKey = ?", $phoneNumber, $key]);
+        $apiAccess = $apiAccess->query[0];
+        return $apiAccess->userid;
     }
 }
