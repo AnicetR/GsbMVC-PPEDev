@@ -66,7 +66,6 @@ class MainController
         if (($route['controller'] != 'Auth') && ($route['method'] != 'login' || $route['method'] != 'index')) {
             if (!$this->f3->get('SESSION.logged')) {
                 $this->f3->reroute('/');
-                exit;
             }
         }
     }
@@ -74,29 +73,30 @@ class MainController
 
     private function isUserAllowedToContentOrReroute()
     {
-        $allowed = $this->f3->get('menu');
+        if($this->f3->get('SESSION.logged')){
+            $allowed = $this->f3->get('menu');
 
-        $current = $this->getCurrentRoute();
-        $canGoFurther = false;
+            $current = $this->getCurrentRoute();
+            $canGoFurther = false;
 
-        if ($current['method'] != 'index' || empty($current['method'])) {
-            $current = '/'.implode('/', $current);
-        } else {
-            $current = '/'.$current['controller'];
-        }
-
-        $this->debugbar['messages']->addMessage($allowed);
-        foreach ($allowed as $item)
-        {
-            if($current == $item['link']){
-                $canGoFurther = true;
-                break;
+            if ($current['method'] != 'index' || empty($current['method'])) {
+                $current = '/'.implode('/', $current);
+            } else {
+                $current = '/'.$current['controller'];
             }
 
-        }
-        if(!$canGoFurther){
-            $this->f3->reroute('/Manager');
-            exit();
+            $this->debugbar['messages']->addMessage($allowed);
+            foreach ($allowed as $item)
+            {
+                if($current == $item['link']){
+                    $canGoFurther = true;
+                    break;
+                }
+
+            }
+            if(!$canGoFurther){
+                return $this->f3->reroute('/Manager');
+            }
         }
 
     }
