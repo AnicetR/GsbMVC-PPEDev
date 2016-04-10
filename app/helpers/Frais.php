@@ -40,9 +40,11 @@ class Frais
         $currentDate = new DateTime();
         $interval = $date->diff($currentDate)->y;
         $invert = $date->diff($currentDate)->invert;
+        print_r($interval);
         if ($interval == 0 && !$invert) {
             return true;
         }
+
         return false;
     }
 }

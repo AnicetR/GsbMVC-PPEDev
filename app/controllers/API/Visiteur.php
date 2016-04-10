@@ -16,12 +16,9 @@ class Visiteur extends MainAPI{
         $this->user = new User();
     }
 
-    public function index(){
-        echo json_encode(true);
-    }
-
     public function getUserInfos()
     {
+
         $user = $this->user->getByID($this->f3->get('userId'))[0];
         foreach ($user as $fieldName => $value)
             $this->data[$fieldName] = $value;
@@ -32,23 +29,15 @@ class Visiteur extends MainAPI{
     {
         $userId = $this->f3->get('userId');
         $this->data['fraisForfait'] = Frais::getCurrentBundled($userId);
-        $i = 0;
-        foreach (Frais::getCurrentNotBundled($userId) as $item){
-            foreach($item as $key => $value){
-                $this->data['fraisHorsForfait'][$i][$key] = $value;
-            }
-            $i++;
-        }
+        $this->data['fraisHorsForfait'] = Frais::getCurrentNotBundled($userId);
         echo json_encode($this->data);
-
-
     }
 
     public function saveCurrentBundled()
     {
         $infos = [];
         $userId = $this->f3->get('userId');
-        $postDatas = $this->getPUT();
+        $postDatas = $this->f3->get('GET');
         if(Frais::saveBundled($postDatas, $userId))
             $infos[] = ['success' => "Les frais forfaitisés ont bien été enregistrés."];
         else
@@ -60,8 +49,7 @@ class Visiteur extends MainAPI{
     public function saveCurrentNotBundled()
     {
         $userId = $this->f3->get('userId');
-        $postDatas = $this->getPUT();
-
+        $postDatas = $this->f3->get('GET');
         $infos = [];
         $save = true;
         try {
@@ -97,6 +85,8 @@ class Visiteur extends MainAPI{
         echo json_encode($infos);
     }
 
-
+    public function index(){
+        json_encode('test');
+    }
 
 }
