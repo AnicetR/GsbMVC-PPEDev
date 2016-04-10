@@ -49,7 +49,7 @@
                                             <tr>
                                                 <td>{{ @fiche.nom }} {{ @fiche.prenom }}</td>
                                                 <td>{{ @fiche.mois }}</td>
-                                                <td></td>
+                                                <td><a href="/Manager/validationFiche/{{ @fiche.idVisiteur }}/{{ @fiche.mois }}" class="button">Voir la fiche à valider</a></td>
                                             </tr>
                                         </repeat>
 

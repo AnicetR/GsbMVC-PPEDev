@@ -16,6 +16,7 @@ return [
             // 'libelle' => 'lien'
             'Saisie de fiche de frais' => '/Manager/setFiche',
             'Mes fiches de frais'      => '/Manager/fichesList',
+            'Acces application'      => '/Manager/phoneAccess',
         ],
     ],
     //Seulement les comptables (id 3)

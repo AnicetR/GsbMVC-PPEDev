@@ -1,0 +1,120 @@
+<include href="public/header.phtml" />
+
+<div class="row">
+    <div class="medium-6 columns">
+        <img src="/images/logoalt.png" alt="GSB Logo">
+    </div>
+
+
+</div>
+<div class="white-panel fullwidth">
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <include href="public/messages.phtml" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="medium-12 columns">
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-3 columns" style="border-right: 1px solid #dddddd;">
+                            <include href="public/manager/partials/menu.phtml" />
+
+                        </div>
+                        <div class="medium-9 columns">
+                            <div class="row">
+                                <div class="col-md-12 columns">
+                                    <h3>Mes fiches de frais</h3>
+
+                                    <check if="{{ @ficheFrais }}">
+                                        <h4>Fiche de frais du mois {{ @ficheFrais->fiche['mois'] }} :</h4>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Etat : </td>
+                                                    <td>{{ @ficheFrais->fiche['libelle'] }} {{ @ficheFrais->fiche['dateModif'] }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Montant validé : </td>
+                                                    <td>{{ @ficheFrais->fiche['montantValide'] }}€</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h5>Frais forfaitisés - {{ @ficheFrais->fiche['nbJustificatifs'] }} justificatifs reçus</h5>
+                                        <table>
+                                            <thead>
+                                                <th>Libelle</th>
+                                                <th>Quantité</th>
+                                                <th>Montant</th>
+                                            </thead>
+                                            <tbody>
+                                                <repeat group="{{ @ficheFrais->bundled }}" value="{{ @ligne }}">
+                                                    <tr>
+                                                        <td>{{ @ligne.libelle }}</td>
+                                                        <td>{{ @ligne.quantite }}</td>
+                                                        <td>{{ @ligne.montant }} €</td>
+                                                    </tr>
+                                                </repeat>
+                                            </tbody>
+                                        </table>
+                                        <h5>Frais hors forfait</h5>
+                                        <table class="hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Libellé</th>
+                                                <th>Montant</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <repeat group="{{ @ficheFrais->notBundled }}" value="{{ @ligne }}">
+                                                <tr>
+                                                    <td>{{ date_format(date_create(@ligne.date), 'd/m/Y') }}</td>
+                                                    <td>{{ @ligne.libelle }}</td>
+                                                    <td>{{ @ligne.montant }}€</td>
+                                                    <td>
+                                                        <check if="strpos(@ligne.libelle, 'REFUSE') === false">
+                                                            <a href="/Manager/invalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button info">Reporter</a>
+                                                            <a href="/Manager/invalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button alert">Refuser</a>
+                                                        </check>
+                                                        <check if="{{ strpos(@ligne.libelle, 'REFUSE') === 0 }}">
+                                                            <a href="/Manager/revertInvalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button success">Restaurer</a>
+                                                        </check>
+                                                    </td>
+                                                </tr>
+                                            </repeat>
+                                            </tbody>
+                                        </table>
+                                        <h5>Total</h5>
+                                        <table class="hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Fais forfaitisés</th>
+                                                <th>Frais hors forfait</th>
+                                                <th>Total</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{ @bundledCost.total }}€</td>
+                                                    <td>{{ @notBundledCost.total }}€</td>
+                                                    <td>{{ floatval(@bundledCost.total + @notBundledCost.total) }}€</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p class="text-right"><a href="" class="button success">Valider la fiche de frais</a></p>
+                                    </check>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<include href="public/footer.phtml" />

@@ -41,7 +41,7 @@ class Frais extends Mapper
     {
         $db = Registry::get('db');
         $request = "
-            SELECT fraisforfait.id AS idFrais, fraisforfait.libelle AS libelle, lignefraisforfait.quantite AS quantite
+            SELECT fraisforfait.id AS idFrais, fraisforfait.libelle AS libelle, lignefraisforfait.quantite AS quantite, (lignefraisforfait.quantite * fraisforfait.montant) AS montant
             FROM lignefraisforfait
             INNER JOIN fraisforfait ON fraisforfait.id = lignefraisforfait.idfraisforfait
             WHERE lignefraisforfait.idVisiteur = '$userID' AND lignefraisforfait.mois = $month
@@ -157,5 +157,107 @@ class Frais extends Mapper
         }
 
         return false;
+    }
+
+    /**
+     * @param $userID
+     * @param $month
+     * @return array
+     */
+    public static function bundledTotal($userID, $month)
+    {
+        $db = Registry::get('db');
+        $request = "
+            SELECT SUM(lignefraisforfait.quantite * fraisforfait.montant) AS total
+            FROM lignefraisforfait
+            INNER JOIN fraisforfait ON fraisforfait.id = lignefraisforfait.idfraisforfait
+            WHERE lignefraisforfait.idVisiteur = '$userID' AND lignefraisforfait.mois = $month
+        ";
+        $bundled = $db->exec($request);
+
+        return $bundled[0];
+
+    }
+
+    /**
+     * @param $userID
+     * @param $month
+     * @return array
+     */
+    public static function notBundledTotal($userID, $month)
+    {
+        $db = Registry::get('db');
+        $request = "
+            SELECT SUM(montant) AS total
+            FROM lignefraishorsforfait
+            WHERE idVisiteur = '$userID' AND mois = $month AND libelle NOT LIKE 'REFUSE :%'
+        ";
+
+        $notBundled = $db->exec($request);
+
+        return $notBundled[0];
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function invalidateNotBundled($id)
+    {
+        $frais = new self('lignefraishorsforfait');
+        $sauvegarde = new self('lignefraishorsforfait_sauvegarde');
+
+        $frais->load(['id=?', $id]);
+        $newId = self::addToCurrentNotBundled($frais);
+        $sauvegarde->id = $frais->id;
+        $sauvegarde->newid = $newId;
+        $sauvegarde->libelle = $frais->libelle;
+        $frais->libelle = 'REFUSE : '.$frais->libelle;
+
+        if($sauvegarde->save() && $frais->save())
+            return true;
+        return false;
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public static function revertInvalidateNotBundled($id)
+    {
+        $frais = new self('lignefraishorsforfait');
+        $newFrais = new self('lignefraishorsforfait');
+        $sauvegarde = new self('lignefraishorsforfait_sauvegarde');
+
+        $sauvegarde->load(['id=?', $id]);
+        $frais->load(['id=?', $id]);
+        $newFrais->load(['id=?', $sauvegarde->newid]);
+
+        $frais->libelle = $sauvegarde->libelle;
+
+        if($sauvegarde->erase() && $frais->save() && $newFrais->erase())
+            return true;
+        return false;
+    }
+
+    /**
+     * @param $frais
+     * @return mixed
+     */
+    public static function addToCurrentNotBundled($frais)
+    {
+        $db = Registry::get('db');
+        $lastMonthReq = "SELECT idVisiteur, MAX(mois) as mois FROM lignefraisforfait WHERE idVisiteur = '$frais->idVisiteur'";
+        $lastMonth = $db->exec($lastMonthReq);
+
+        $last = new self('lignefraishorsforfait');
+        $last->idVisiteur = $frais->idVisiteur;
+        $last->libelle = $frais->libelle;
+        $last->montant = $frais->montant;
+        $last->date = $frais->date;
+        $last->mois = $lastMonth[0]['mois'];
+        $last->save();
+
+        return $last->id;
     }
 }

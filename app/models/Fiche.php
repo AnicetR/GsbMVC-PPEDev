@@ -76,7 +76,7 @@ class Fiche extends Mapper
         $fields = $db->exec($request);
 
         $db->begin();
-        $db->exec("UPDATE fichefrais  SET idEtat = 'CL', dateModif = CURRENT_DATE WHERE idVisiteur = '$userID', mois");
+        $db->exec("UPDATE fichefrais  SET idEtat = 'CL', dateModif = CURRENT_DATE WHERE idVisiteur = '$userID' AND mois = $month");
         $db->exec("INSERT INTO fichefrais (idVisiteur, mois, nbJustificatifs, montantValide, dateModif, idEtat) VALUES ('$userID', '$month', 0, 0, CURRENT_DATE, 'CR')");
         foreach ($fields as $id) {
             $id = $id['id'];
@@ -98,6 +98,18 @@ class Fiche extends Mapper
             $frais->idEtat = 'CL';
             $frais->dateModif = date('Y-m-d H:i:s');
         $frais->save();
+    }
+
+    /**
+     *
+     */
+    public static function getClosedFiches()
+    {
+        $db = Registry::get('db');
+        $request = "SELECT ficheFrais.idVisiteur, ficheFrais.mois, utilisateur.nom, utilisateur.prenom FROM fichefrais
+                    LEFT JOIN utilisateur ON fichefrais.idVisiteur = utilisateur.id 
+                    WHERE idEtat = 'CL'";
+        return $db->exec($request);
     }
 
 }
