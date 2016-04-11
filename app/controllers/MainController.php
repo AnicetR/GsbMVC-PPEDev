@@ -46,7 +46,7 @@ class MainController
     {
         $this->f3->set('menu', $this->generateMenu());
         $this->isConnectedOrReroute();
-        $this->isUserAllowedToContentOrReroute();
+        //$this->isUserAllowedToContentOrReroute();
     }
 
     /**
@@ -71,35 +71,35 @@ class MainController
     }
 
 
-    private function isUserAllowedToContentOrReroute()
-    {
-        if($this->f3->get('SESSION.logged')){
-            $allowed = $this->f3->get('menu');
-
-            $current = $this->getCurrentRoute();
-            $canGoFurther = false;
-
-            if ($current['method'] != 'index' || empty($current['method'])) {
-                $current = '/'.implode('/', $current);
-            } else {
-                $current = '/'.$current['controller'];
-            }
-
-            $this->debugbar['messages']->addMessage($allowed);
-            foreach ($allowed as $item)
-            {
-                if($current == $item['link']){
-                    $canGoFurther = true;
-                    break;
-                }
-
-            }
-            if(!$canGoFurther){
-                return $this->f3->reroute('/Manager');
-            }
-        }
-
-    }
+//    private function isUserAllowedToContentOrReroute()
+//    {
+//        if($this->f3->get('SESSION.logged')){
+//            $allowed = $this->f3->get('menu');
+//
+//            $current = $this->getCurrentRoute();
+//            $canGoFurther = false;
+//
+//            if ($current['method'] != 'index' || empty($current['method'])) {
+//                $current = '/'.implode('/', $current);
+//            } else {
+//                $current = '/'.$current['controller'];
+//            }
+//
+//            $this->debugbar['messages']->addMessage($allowed);
+//            foreach ($allowed as $item)
+//            {
+//                if($current == $item['link']){
+//                    $canGoFurther = true;
+//                    break;
+//                }
+//
+//            }
+//            if(!$canGoFurther){
+//                return $this->f3->reroute('/Manager');
+//            }
+//        }
+//
+//    }
 
     /**
      * Connaitre le controlleur et la méthode utilisée pour la page en cours (la route).

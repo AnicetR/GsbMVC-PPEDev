@@ -43,7 +43,7 @@ class MainAPI{
             $phoneNumber = $this->f3->get('SERVER.PHP_AUTH_USER');
             $getDatas = $this->f3->get('GET');
             if ($APIkey = $this->Authorize($phoneNumber, $getDatas)) {
-                echo json_encode($APIkey);
+                echo json_encode(['apiKey' => $APIkey]);
                 die();
             }
         }
