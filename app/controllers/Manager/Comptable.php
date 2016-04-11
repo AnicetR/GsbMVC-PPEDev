@@ -22,12 +22,20 @@ class Comptable extends MainController
         echo $this->view->render('public/manager/comptable/index.phtml');
     }
 
+    /**
+     * GET Route
+     * Liste des fiches à valider
+     */
     public function pendingFiches()
     {
         $this->f3->set('fiches', Fiche::getClosedFiches());
         echo $this->view->render('public/manager/comptable/index.phtml');
     }
 
+    /**
+     * GET Route
+     * Affichage de la fiche à valider
+     */
     public function validationFiche()
     {
         $userId = $this->f3->get('PARAMS.userid');
@@ -50,6 +58,10 @@ class Comptable extends MainController
 
     }
 
+    /**
+     * GET Route
+     * Refus d'un frais hors forfait
+     */
     public function invalidateNotBundled()
     {
         $notBundledId = $this->f3->get('PARAMS.notBundledId');
@@ -64,6 +76,10 @@ class Comptable extends MainController
         $this->f3->reroute("/Manager/validationFiche/$userId/$month");
     }
 
+    /**
+     * GET Route
+     * Restauration d'un frais hors forfait refusé ou reporté
+     */
     public function revertInvalidateNotBundled()
     {
         $notBundledId = $this->f3->get('PARAMS.notBundledId');

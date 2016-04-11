@@ -10,22 +10,33 @@ class MainAPI{
 
     protected $f3, $accessManager;
 
+    /**
+     * MainAPI constructor.
+     */
     public function __construct(){
         $this->f3 = Base::instance();
         $this->accessManager = new ApiAccessManager();
-
     }
 
+    /**
+     * A faire avant tout routage
+     */
     public function beforeRoute()
     {
         $this->Auth();
     }
 
+    /**
+     * A faire après tout routage
+     */
     public function afterRoute()
     {
         header('Content-Type: application/json');
     }
 
+    /**
+     * Authentification du visiteur sur l'API
+     */
     public function Auth()
     {
         $phoneNumber = null;
@@ -60,13 +71,19 @@ class MainAPI{
         }
     }
 
+    /**
+     * Authorisation d'un visiteur qui n'a pas de token ni de clé d'API
+     *
+     * @param string $phoneNumber Le numéto de téléphone
+     * @param array $getData Les données du téléphone
+     * @return mixed Renvoie la clé d'API si tout a fonctionné, rien sinon.
+     */
     public function Authorize($phoneNumber, $getData){
         $APIaccess = new ApiAccessManager();
         $expected = ['uuid', 'model', 'platform'];
         $tempData = [];
         foreach ($getData as $key => $value) {
             if(in_array($key, $expected)){
-
                 $tempData[$key] = $value;
             }
         }
@@ -80,6 +97,11 @@ class MainAPI{
         }
     }
 
+    /**
+     * Récupération des données envoyées en PUT par AngularJS
+     *
+     * @return array Le contenu du BODY
+     */
     protected function getPUT(){
         $body = $this->f3->get('BODY');
         return json_decode($body, true);

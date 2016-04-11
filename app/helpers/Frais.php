@@ -35,6 +35,13 @@ class Frais
         return $date[1].$date[0];
     }
 
+    /**
+     * Permet de vérifier que la date n'est pas plus vieille qu'un an ou n'est pas dans le futur.
+     *
+     * @param $date une instance de DateTime
+     * 
+     * @return bool vrai si la date est inférieure à un an ou qu'elle n'est pas dans le futur, faux sinon
+     */
     public static function isLessThanOneYearOld($date)
     {
         $currentDate = new DateTime();

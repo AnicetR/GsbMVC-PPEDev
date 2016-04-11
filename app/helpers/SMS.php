@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Anicet
- * Date: 10/04/2016
- * Time: 14:41
- */
 
 namespace App\Helpers;
 
@@ -24,7 +18,6 @@ class SMS
         $auth_id = $f3->get('sms.apiKey');
         $auth_token = $f3->get('sms.token');
         $p = new RestAPI($auth_id, $auth_token);
-        // Send a message
         $params = array(
             'src' => 'GSB',
             'dst' => self::formatPhoneNumber($phoneNumber),
@@ -37,6 +30,7 @@ class SMS
      * Permet de formater le numero de telephone au format international
      *
      * @param $phoneNumber Numero de téléphone
+     * 
      * @return string Numéro de téléphone avec le code pays
      */
     public static function formatPhoneNumber($phoneNumber){

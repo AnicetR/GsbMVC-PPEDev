@@ -132,6 +132,7 @@ class Visiteur extends MainController
     }
 
     /**
+     * POST Route
      * Suppression d'un élément non forfaitisé.
      *
      * @param $id int id de l'élément non forfaitisé a supprimer

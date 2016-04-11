@@ -7,11 +7,20 @@ class ApiAccessManager extends MainModel
 {
     protected $table = 'accesapi';
 
+    /**
+     * ApiAccessManager constructor.
+     */
     function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * Ajout de l'autorisation d'un numéro de téléphone pour l'utilisateur
+     *
+     * @param string $userId L'id de l'utilisateur
+     * @param string $phoneNumber Le numero de téléphone de l'utilisateur
+     */
     public function addAccess($userId, $phoneNumber)
     {
         $apiAccess = new self();
@@ -20,12 +29,26 @@ class ApiAccessManager extends MainModel
         $apiAccess->save();
     }
 
+    /**
+     * Suppression de l'autorisation d'un numero de téléphone pour un utilisateur
+     *
+     * @param string $userId
+     * @param string $phoneNumber
+     */
     public function removeAccess($userId, $phoneNumber, $key)
     {
-        $apiAccess = $this->load(['userId = ?  AND phoneNumber = ? AND apiKey LIKE ?', $userId, $phoneNumber, $key]);
+        $apiAccess = $this->load(['userId = ?  AND phoneNumber = ? ', $userId, $phoneNumber]);
         $apiAccess->erase();
     }
 
+    /**
+     * Récupération de l'accès pour un utilisateur
+     *
+     * @param string $phoneNumber Le numéro de téléphone
+     * @param string $key au format apiKey*Token
+     *
+     * @return string L'id de l'utilisateur
+     */
     public function getAccess($phoneNumber, $key)
     {
         $key = explode('*', $key);
@@ -34,11 +57,26 @@ class ApiAccessManager extends MainModel
         return $apiAccess->userid;
     }
 
+    /**
+     * Vérifie que le numéro de téléphone est bien dans la base de donnée
+     *
+     * @param string $phoneNumber Le numéro de téléphone
+     *
+     * @return bool Vrai si il y est, faux sinon
+     */
     public function phoneExists($phoneNumber)
     {
         return ($this->count(['phoneNumber = ?', $phoneNumber]) == 1);
     }
 
+    /**
+     * Ajout des éléments d'authentification d'un téléphone
+     *
+     * @param string $phoneNumber Le numéro de téléphone
+     * @param array $datas Les données du téléphone
+     *
+     * @return array|bool Un array contenant la clé d'API et le Token si la sauvegarde s'est bien passée, faux sinon.
+     */
     public function addPhone($phoneNumber, $datas)
     {
         $this->load(['phoneNumber = ?', $phoneNumber]);
@@ -52,8 +90,11 @@ class ApiAccessManager extends MainModel
     }
 
     /**
-     * @param $datas
-     * @return string
+     * Génération de la clé d'API en fonction des infos du téléphone
+     *
+     * @param array $datas Les infos du téléphone
+     * 
+     * @return string La clé d'API
      */
     public function generateKey($datas)
     {
@@ -64,6 +105,11 @@ class ApiAccessManager extends MainModel
         return $key;
     }
 
+    /**
+     * Génération d'un token composé de GSB- et d'une clé numérique à 5 caractères
+     *
+     * @return string GSB-le Token
+     */
     public function generateToken()
     {
         $token = str_shuffle(rand(0,5000).time());

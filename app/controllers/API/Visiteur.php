@@ -10,16 +10,26 @@ class Visiteur extends MainAPI{
     private $user;
     private $data = [];
 
+    /**
+     * Visiteur constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         $this->user = new User();
     }
 
+    /**
+     * Retour de base si connecté
+     */
     public function index(){
         echo json_encode(true);
     }
 
+    /**
+     * GET route
+     * Récupération des infos utilisateurs
+     */
     public function getUserInfos()
     {
         $user = $this->user->getByID($this->f3->get('userId'))[0];
@@ -28,6 +38,10 @@ class Visiteur extends MainAPI{
         echo json_encode($this->data);
     }
 
+    /**
+     * GET route
+     * Récupération de tous les frais de l'utilisateur pour le mois courrant
+     */
     public function getAllDatas()
     {
         $userId = $this->f3->get('userId');
@@ -44,6 +58,10 @@ class Visiteur extends MainAPI{
 
     }
 
+    /**
+     * PUT route
+     * Sauvegarde d'un ou plusieurs frais forfaitisés
+     */
     public function saveCurrentBundled()
     {
         $infos = [];
@@ -57,6 +75,10 @@ class Visiteur extends MainAPI{
         echo json_encode($infos);
     }
 
+    /**
+     * PUT route
+     * Sauvegarde d'un frais hors forfait
+     */
     public function saveCurrentNotBundled()
     {
         $userId = $this->f3->get('userId');

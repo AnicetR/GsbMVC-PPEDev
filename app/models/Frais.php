@@ -160,9 +160,12 @@ class Frais extends Mapper
     }
 
     /**
-     * @param $userID
-     * @param $month
-     * @return array
+     * Calcule le total des couts des éléments forfaitisés pour le mois selectionné
+     *
+     * @param string $userID L'id de l'utilisateur
+     * @param string $month Le mois au format 201603
+     * 
+     * @return array Un array contenant le total des couts
      */
     public static function bundledTotal($userID, $month)
     {
@@ -180,9 +183,12 @@ class Frais extends Mapper
     }
 
     /**
-     * @param $userID
-     * @param $month
-     * @return array
+     * Calcule le total des couts des éléments non forfaitisés pour le mois selectionné
+     *
+     * @param string $userID L'id de l'utilisateur
+     * @param string $month Le mois au format 201603
+     *
+     * @return array Un array contenant le total des couts
      */
     public static function notBundledTotal($userID, $month)
     {
@@ -199,8 +205,11 @@ class Frais extends Mapper
     }
 
     /**
-     * @param $id
-     * @return bool
+     * Refuse un frais non forfaitisé
+     *
+     * @param int $id l'ID du frais
+     *
+     * @return bool Vrai si le frais a été refusé, faux s'il y a eu une erreur
      */
     public static function invalidateNotBundled($id)
     {
@@ -220,8 +229,11 @@ class Frais extends Mapper
     }
 
     /**
-     * @param $id
-     * @return bool
+     * Restaure le frais non forfaitisé refusé
+     *
+     * @param int $id l'ID du frais
+     *
+     * @return bool Vrai si le frais a été restauré, faux s'il y a eu une erreur
      */
     public static function revertInvalidateNotBundled($id)
     {
@@ -241,8 +253,11 @@ class Frais extends Mapper
     }
 
     /**
-     * @param $frais
-     * @return mixed
+     * Ajout de la ligne de frais non forfaitisé à la fiche de frais du mois en cours.
+     *
+     * @param object $frais Le frais
+     *
+     * @return int L'id de la ligne de frais hors forfait que l'on vient de créer.
      */
     public static function addToCurrentNotBundled($frais)
     {

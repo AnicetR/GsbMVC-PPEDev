@@ -101,7 +101,9 @@ class Fiche extends Mapper
     }
 
     /**
+     * Récupération de la liste des fiches cloturées
      *
+     * @return array Le listing des fiches.
      */
     public static function getClosedFiches()
     {
