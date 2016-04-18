@@ -76,12 +76,21 @@
                                                     <td>{{ @ligne.libelle }}</td>
                                                     <td>{{ @ligne.montant }}€</td>
                                                     <td>
-                                                        <check if="strpos(@ligne.libelle, 'REFUSE') === false">
-                                                            <a href="/Manager/invalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button info">Reporter</a>
-                                                            <a href="/Manager/invalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button alert">Refuser</a>
-                                                        </check>
-                                                        <check if="{{ strpos(@ligne.libelle, 'REFUSE') === 0 }}">
-                                                            <a href="/Manager/revertInvalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button success">Restaurer</a>
+                                                        <check if="strpos(@ligne.libelle, 'REFUSE') === 0 " >
+                                                            <true>
+                                                                <a href="/Manager/revertNotBundledState/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button success">Restaurer</a>
+                                                            </true>
+                                                            <false>
+                                                                <check if="strpos(@ligne.libelle, 'REPORTE') === 0">
+                                                                    <true>
+                                                                        <a href="/Manager/revertNotBundledState/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button success">Restaurer</a>
+                                                                    </true>
+                                                                    <false>
+                                                                        <a href="/Manager/reportNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button info">Reporter</a>
+                                                                        <a href="/Manager/invalidateNotBundled/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ @ligne.id }}" class="button alert">Refuser</a>
+                                                                    </false>
+                                                                </check>
+                                                            </false>
                                                         </check>
                                                     </td>
                                                 </tr>
@@ -105,7 +114,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <p class="text-right"><a href="" class="button success">Valider la fiche de frais</a></p>
+                                        <p class="text-right"><a href="/Manager/validateFiche/{{ @PARAMS.userid }}/{{ @PARAMS.month }}/{{ base64_encode(floatval(@bundledCost.total + @notBundledCost.total)) }}" class="button success">Valider la fiche de frais</a></p>
                                     </check>
                                 </div>
                             </div>

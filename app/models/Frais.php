@@ -217,9 +217,8 @@ class Frais extends Mapper
         $sauvegarde = new self('lignefraishorsforfait_sauvegarde');
 
         $frais->load(['id=?', $id]);
-        $newId = self::addToCurrentNotBundled($frais);
         $sauvegarde->id = $frais->id;
-        $sauvegarde->newid = $newId;
+        $sauvegarde->newid = $frais->id;
         $sauvegarde->libelle = $frais->libelle;
         $frais->libelle = 'REFUSE : '.$frais->libelle;
 
@@ -229,13 +228,41 @@ class Frais extends Mapper
     }
 
     /**
-     * Restaure le frais non forfaitisé refusé
+     * Reporte un frais non forfaitisé
+     *
+     * @param int $id l'ID du frais
+     *
+     * @return bool Vrai si le frais a été reporté, faux s'il y a eu une erreur
+     */
+    public static function reportNotBundled($id)
+    {
+        $frais = new self('lignefraishorsforfait');
+        $sauvegarde = new self('lignefraishorsforfait_sauvegarde');
+
+        $frais->load(['id=?', $id]);
+
+        $sauvegarde->id = $frais->id;
+        $sauvegarde->libelle = $frais->libelle;
+
+        $frais->libelle = 'REPORTE : '.$frais->libelle;
+
+        $newId = self::addToCurrentNotBundled($frais);
+
+        $sauvegarde->newid = $newId;
+
+        if($sauvegarde->save() && $frais->save())
+            return true;
+        return false;
+    }
+
+    /**
+     * Restaure le frais non forfaitisé refusé ou reporté
      *
      * @param int $id l'ID du frais
      *
      * @return bool Vrai si le frais a été restauré, faux s'il y a eu une erreur
      */
-    public static function revertInvalidateNotBundled($id)
+    public static function revertNotBundledState($id)
     {
         $frais = new self('lignefraishorsforfait');
         $newFrais = new self('lignefraishorsforfait');
@@ -245,12 +272,18 @@ class Frais extends Mapper
         $frais->load(['id=?', $id]);
         $newFrais->load(['id=?', $sauvegarde->newid]);
 
+        if(strpos($newFrais->libelle, 'REPORTE') !== false)
+            $newFrais->erase();
+
         $frais->libelle = $sauvegarde->libelle;
 
-        if($sauvegarde->erase() && $frais->save() && $newFrais->erase())
+        if($sauvegarde->erase() && $frais->save())
             return true;
         return false;
     }
+
+
+
 
     /**
      * Ajout de la ligne de frais non forfaitisé à la fiche de frais du mois en cours.
@@ -275,4 +308,5 @@ class Frais extends Mapper
 
         return $last->id;
     }
+    
 }

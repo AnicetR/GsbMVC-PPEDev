@@ -53,11 +53,6 @@ class Comptable extends MainController
         echo $this->view->render('public/manager/comptable/validation.phtml');
     }
 
-    public function saveValidationFiche()
-    {
-
-    }
-
     /**
      * GET Route
      * Refus d'un frais hors forfait
@@ -78,19 +73,60 @@ class Comptable extends MainController
 
     /**
      * GET Route
-     * Restauration d'un frais hors forfait refusé ou reporté
+     * Refus d'un frais hors forfait
      */
-    public function revertInvalidateNotBundled()
+    public function reportNotBundled()
     {
         $notBundledId = $this->f3->get('PARAMS.notBundledId');
         $userId = $this->f3->get('PARAMS.userid');
         $month = $this->f3->get('PARAMS.month');
 
-        if(Frais::revertInvalidateNotBundled($notBundledId))
+        if(Frais::reportNotBundled($notBundledId))
+            $this->flash->add('L\'élément non forfaitisé a bien été reporté sur la fiche actuelle.', 'success');
+        else
+            $this->flash->add('Un erreur est survenue, l\'élément non forfaitisé n\'a pas pu être refusé. <br/>Merci de réitérer votre tentative ou de contacter le service technique.', 'alert');
+
+        $this->f3->reroute("/Manager/validationFiche/$userId/$month");
+    }
+
+    /**
+     * GET Route
+     * Restauration d'un frais hors forfait refusé ou reporté
+     */
+    public function revertNotBundledState()
+    {
+        $notBundledId = $this->f3->get('PARAMS.notBundledId');
+        $userId = $this->f3->get('PARAMS.userid');
+        $month = $this->f3->get('PARAMS.month');
+
+        if(Frais::revertNotBundledState($notBundledId))
             $this->flash->add('L\'élément non forfaitisé a bien été restauré.', 'success');
         else
             $this->flash->add('Un erreur est survenue, l\'élément non forfaitisé n\'a pas pu être restauré. <br/>Merci de réitérer votre tentative ou de contacter le service technique..', 'alert');
 
-        $this->f3->reroute("/Manager/validationFiche/$userId/$month");
+        $this->f3->reroute("/Manager/pendingFiches");
     }
+
+    /**
+     * GET Route
+     * Permet de valider une fiche de frais.
+     */
+    public function validateFiche()
+    {
+        $userId = $this->f3->get('PARAMS.userid');
+        $month = $this->f3->get('PARAMS.month');
+        $montant = floatval(base64_decode($this->f3->get('PARAMS.montant')));
+        if(Fiche::validateFiche($userId, $month, $montant)){
+            $this->flash->add('La fiche a bien été validée.', 'success');
+            $this->f3->reroute("/Manager/pendingFiches");
+        }
+        else{
+            $this->flash->add('Un erreur est survenue, la fiche n\'a pas pu être validée. <br/>Merci de réitérer votre tentative ou de contacter le service technique..', 'alert');
+            $this->f3->reroute("/Manager/validationFiche/$userId/$month");
+        }
+    }
+
+
+
+
 }

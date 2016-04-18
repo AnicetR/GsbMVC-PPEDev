@@ -94,7 +94,7 @@ class Fiche extends Mapper
     public static function closeFiche($userID, $month)
     {
         $frais = new self('fichefrais');
-        $frais->load(['idVisiteur=?', 'mois=?', $userID, $month]);
+        $frais->load(['idVisiteur=? mois=? ', $userID, $month]);
             $frais->idEtat = 'CL';
             $frais->dateModif = date('Y-m-d H:i:s');
         $frais->save();
@@ -112,6 +112,24 @@ class Fiche extends Mapper
                     LEFT JOIN utilisateur ON fichefrais.idVisiteur = utilisateur.id 
                     WHERE idEtat = 'CL'";
         return $db->exec($request);
+    }
+
+    /**
+     * Valide la fiche
+     *
+     * @param string $userID
+     * @param int $month au forfait mmyyyy
+     *
+     * @return bool
+     */
+    public static function validateFiche($userID, $month, $montant)
+    {
+        $frais = new self('fichefrais');
+        $frais->load(['idVisiteur=? AND mois=? ', $userID, $month]);
+        $frais->idEtat = 'VA';
+        $frais->montantValide = $montant;
+        $frais->dateModif = date('Y-m-d H:i:s');
+        return $frais->save();
     }
 
 }
