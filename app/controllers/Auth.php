@@ -1,11 +1,14 @@
 <?php
-/**
- * Class de gestion de la connexion.
- */
+
 namespace App\Controllers;
 
 use App\Models\User;
 
+/**
+ * Class Auth
+ * Class de gestion de la connexion au site.
+ * @package App\Controllers
+ */
 class Auth extends MainController
 {
     /**

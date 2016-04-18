@@ -7,6 +7,11 @@ use Cache;
 use DB\SQL\Mapper as Mapper;
 use Registry;
 
+/**
+ * Class MainModel
+ * Model principal
+ * @package App\Models
+ */
 class MainModel extends Mapper
 {
     protected $f3, $table, $cache, $debugbar;

@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+/**
+ * Class ApiAccessManager
+ * Model gérant les accès à l'API
+ * @package App\Models
+ */
 
 class ApiAccessManager extends MainModel
 {

@@ -6,6 +6,12 @@ use DB\SQL\Mapper as Mapper;
 use Exception;
 use Registry;
 
+/**
+ * Class Frais
+ * Modèle gérant les opérations sur les frais.
+ * @package App\Models
+ */
+
 class Frais extends Mapper
 {
     public function __construct($table)

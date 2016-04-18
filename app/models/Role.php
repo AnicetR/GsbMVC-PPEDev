@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Cache;
 
+/**
+ * Class Role
+ * Modèle gérant les opérations sur les rôles
+ * @package App\Models
+ */
 class Role extends MainModel
 {
     protected $table = 'role';

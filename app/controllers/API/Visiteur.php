@@ -1,10 +1,16 @@
 <?php
 namespace App\Controllers\API;
 
+
 use App\Models\User;
 use App\Models\Frais;
 use App\Helpers\Frais as FraisHelper;
 
+/**
+ * Class Visiteur
+ * API pour les visiteurs
+ * @package App\Controllers\API
+ */
 class Visiteur extends MainAPI{
 
     private $user;

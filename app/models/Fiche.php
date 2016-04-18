@@ -5,6 +5,11 @@ namespace App\Models;
 use DB\SQL\Mapper as Mapper;
 use Registry;
 
+/**
+ * Class Fiche
+ * Modèle gérant les opréations sur les fiches.
+ * @package App\Models
+ */
 class Fiche extends Mapper
 {
     /**

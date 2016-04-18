@@ -5,6 +5,11 @@ namespace App\Helpers;
 use Plivo\RestAPI;
 use Base;
 
+/**
+ * Class SMS
+ * Helper permettant l'envoi de SMS à travers l'API de Plivo
+ * @package App\Helpers
+ */
 class SMS
 {
     /**

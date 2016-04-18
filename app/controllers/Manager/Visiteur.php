@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Manager;
 
+
+
 use App\Controllers\MainController;
 use App\Helpers\Frais as FraisHelper;
 use App\Models\Fiche;
@@ -9,6 +11,11 @@ use App\Models\Frais;
 use App\Models\Role;
 use App\Models\User;
 
+/**
+ * Class Visiteur
+ * Controleur pour les Visiteurs.
+ * @package App\Controllers\Manager
+ */
 class Visiteur extends MainController
 {
      /**

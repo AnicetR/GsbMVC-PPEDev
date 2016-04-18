@@ -6,6 +6,14 @@ use Base;
 use App\Models\ApiAccessManager;
 use App\Helpers\SMS;
 
+/**
+ * Class MainAPI
+ *
+ * Classe mère des controleurs d'API.
+ * Permet de définir un comportemant par défaut (auth) ainsi que les headers dont les controlleurs ont besoin.
+ *
+ * @package App\Controllers\API
+ */
 class MainAPI{
 
     protected $f3, $accessManager;

@@ -4,6 +4,11 @@ namespace App\Models;
 
 use FFMVC\Helpers;
 
+/**
+ * Class User
+ * Modèle gérant les utilisateurs.
+ * @package App\Models
+ */
 class User extends MainModel
 {
     protected $table = 'utilisateur';

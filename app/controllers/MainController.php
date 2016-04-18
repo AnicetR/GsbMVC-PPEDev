@@ -1,9 +1,4 @@
 <?php
-/**
- * Classe mère de tous les contrôleurs.
- *
- * Permet d'inclure dans tous les contrôleurs un comportement par défaut ainsi que les utility class dont ils ont besoin
- */
 namespace App\Controllers;
 
 use Base;
@@ -14,6 +9,12 @@ use View;
 use App\Models\User;
 use App\Models\Role;
 
+/**
+ * Class MainController
+ * Classe mère de tous les contrôleurs.
+ * Permet d'inclure dans tous les contrôleurs un comportement par défaut ainsi que les utility class dont ils ont besoin
+ * @package App\Controllers
+ */
 class MainController
 {
     protected $f3, $view, $flash;

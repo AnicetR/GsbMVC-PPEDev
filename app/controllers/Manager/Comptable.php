@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Manager;
 
+
 use App\Controllers\MainController;
 use App\Helpers\Frais as FraisHelper;
 use App\Models\Fiche;
@@ -9,6 +10,12 @@ use App\Models\Frais;
 use App\Models\Role;
 use App\Models\User;
 
+/**
+ * Class Comptable
+ * Controleur des comptables
+ *
+ * @package App\Controllers\Manager
+ */
 class Comptable extends MainController
 {
 

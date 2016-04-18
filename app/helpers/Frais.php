@@ -4,6 +4,11 @@ namespace App\Helpers;
 
 use DateTime;
 
+/**
+ * Class Frais
+ * Helper pour les frais.
+ * @package App\Helpers
+ */
 class Frais
 {
     /**
