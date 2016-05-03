@@ -19,7 +19,7 @@ return [
             // 'libelle' => 'lien'
             'Saisie de fiche de frais' => '/Manager/setFiche',
             'Mes fiches de frais'      => '/Manager/fichesList',
-            'Acces application'      => '/Manager/phoneAccess',
+            'Gestion des acces smartphones'      => '/Manager/phoneManagement',
         ],
     ],
     /**

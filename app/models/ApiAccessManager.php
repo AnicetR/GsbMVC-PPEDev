@@ -40,7 +40,7 @@ class ApiAccessManager extends MainModel
      * @param string $userId
      * @param string $phoneNumber
      */
-    public function removeAccess($userId, $phoneNumber, $key)
+    public function removeAccess($userId, $phoneNumber)
     {
         $apiAccess = $this->load(['userId = ?  AND phoneNumber = ? ', $userId, $phoneNumber]);
         $apiAccess->erase();
@@ -120,5 +120,18 @@ class ApiAccessManager extends MainModel
         $token = str_shuffle(rand(0,5000).time());
         return 'GSB-'.substr($token, 0, 5);
 
+    }
+
+
+    /**
+     * Récupère la liste des téléphones enregistrés par l'utilisateur
+     *
+     * @param string $userdId L'id de l'utilisateur
+     * @return array La liste des téléphones et leurs infos
+     */
+    public function getPhonesList($userdId)
+    {
+        $this->load(['userId = ?', $userdId]);
+        return $this->query;
     }
 }

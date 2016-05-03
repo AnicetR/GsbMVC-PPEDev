@@ -10,6 +10,7 @@ use App\Models\Fiche;
 use App\Models\Frais;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\ApiAccessManager;
 
 /**
  * Class Visiteur
@@ -153,6 +154,26 @@ class Visiteur extends MainController
         }
 
         $this->f3->reroute('/Manager/setFiche');
+        exit();
+    }
+
+    public function phoneManagement()
+    {
+        $api = new ApiAccessManager();
+        $this->f3->set('phonesList', $api->getPhonesList($this->f3->get('SESSION.userid')));
+        echo $this->view->render('public/manager/visiteur/phoneList.phtml');
+        die();
+    }
+
+    public function phoneManagementDelete()
+    {
+        $api = new ApiAccessManager();
+        if ($api->removeAccess($this->f3->get('SESSION.userid'), $this->f3->get('PARAMS.phoneNumber'))) {
+            $this->flash->add('L\'accès a bien été supprimé.', 'success');
+        } else {
+            $this->flash->add('Un erreur est survenue, l\'accès n\'a pas pu être supprimé. <br/>Merci de réitérer votre tentative ou de contacter le service technique.', 'alert');
+        }
+        $this->f3->reroute('/Manager/phoneManagement');
         exit();
     }
 

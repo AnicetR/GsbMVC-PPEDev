@@ -1,0 +1,64 @@
+<include href="public/header.phtml" />
+
+<div class="row">
+    <div class="medium-6 columns">
+        <img src="/images/logoalt.png" alt="GSB Logo">
+    </div>
+
+
+</div>
+<div class="white-panel fullwidth">
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <include href="public/messages.phtml" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="medium-12 columns">
+            <div class="row">
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-3 columns">
+                            <include href="public/manager/partials/menu.phtml" />
+
+                        </div>
+                        <div class="medium-9 columns">
+                            <div class="row">
+                                <div class="col-md-12 columns">
+                                    <h2>Mes accès smartphones</h2>
+                                    <div class="row">
+                                        <table>
+                                            <thead>
+                                                <th>Modèle</th>
+                                                <th>Plateforme</th>
+                                                <th>Numéro</th>
+                                                <th>Action</th>
+                                            </thead>
+                                            <tbody>
+                                                <repeat group="{{ @phonesList }}" value="{{ @phone }}">
+                                                    <tr>
+                                                        <td>{{ @phone->model }}</td>
+                                                        <td>{{ @phone->platform }}</td>
+                                                        <td>{{ @phone->phoneNumber }}</td>
+                                                        <td><a href="/Manager/phoneManagement/delete/{{ @phone->phoneNumber }}" class="button alert">Supprimer l'accès</a></td>
+                                                    </tr>
+
+                                                </repeat>
+                                            </tbody>
+                                        </table>
+                                        <a href="/Manager/phoneManagement/add" class="button success">Ajouter un téléphone</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<include href="public/footer.phtml" />

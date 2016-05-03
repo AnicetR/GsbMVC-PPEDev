@@ -63,5 +63,5 @@ class Auth extends MainController
         $this->f3->set('SESSION.role', false);
         $this->f3->reroute('/');
     }
-
+    
 }
